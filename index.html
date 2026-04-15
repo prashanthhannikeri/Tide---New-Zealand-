@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Seaview Marina — Tide Forecast</title>
+  
+
+
+  
+<!-- Chart.js and date adapter -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<style>
+  body { font-family: Arial, sans-serif; background:#f0f8ff; margin:18px; color:#033; }
+  h1 { text-align:center; color:#004080; margin-bottom:6px; }
+  #controls { text-align:center; margin-bottom:12px; }
+  #dateSelector { padding:8px; font-size:15px; border-radius:6px; border:1px solid #ccc; }
+  #chartWrap { width:92%; max-width:980px; margin:10px auto; position:relative; }
+  canvas { background:#fff; border-radius:8px; display:block; height:420px; width:100%; }
+  .tooltip-box { position:absolute; pointer-events:none; background:rgba(0,0,0,0.8); color:#fff; padding:6px 10px; border-radius:6px; font-size:13px; display:none; transform:translate(-50%,-100%); white-space:nowrap; }
+  #toggleTableBtn { display:block; margin:10px auto; padding:8px 12px; font-size:14px; cursor:pointer; border-radius:6px; border:1px solid #ccc; background:#fff; }
+  #tableContainer { width:92%; max-width:980px; margin:10px auto; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  th, td { padding:8px 10px; text-align:center; border-bottom:1px solid #eee; }
+  th { background:#f7fbff; color:#004080; font-weight:600; }
+  .high { color:green; font-weight:700; }
+  .low { color:orange; font-weight:700; }
+  .highlight { background:rgba(255,0,0,0.08); }
+  .small { font-size:13px; color:#555; }
+  #notice {
+  display: none !important;
+  }
+
+body {
+  background-image: url("https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/GOPR3282.jpg");
+  background-size: cover;       /* Fill entire page */
+  background-position: center;  /* Centre the image */
+  background-repeat: no-repeat; /* Prevent tiling */
+  background-attachment: fixed; /* Optional: parallax effect */
+  padding-bottom: 60px;  /* Adjust to match footer height */
+
+}
+
+  
+/* Desktop Layout */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* Centre title */
+  position: relative;        /* Allow absolute-position logo */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Logo positioned left */
+header img {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 120px;
+  height: auto;
+}
+
+/* Title styling */
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #004080; /* Blue text */
+  background: white; /* White background */
+  padding: 5px 12px; /* Add some spacing around text */
+  border-radius: 6px; /* Optional: rounded corners */
+  display: inline-block; /* Prevent background from stretching full width */
+  text-align: center;
+}
+
+    /* Add this for Today button */
+  #todayBtn {
+    padding: 10px 16px;       /* bigger padding */
+    font-size: 16px;          /* larger text */
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #007bff; /* blue background */
+    color: white;             /* white text */
+    cursor: pointer;
+    margin-left: 8px;         /* spacing from date picker */
+  }
+
+  #todayBtn:hover {
+    background-color: #0056b3; /* darker blue on hover */
+  }
+
+/* MOBILE LAYOUT */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: static;     /* Reset position */
+  }
+
+  header img {
+    position: static;     /* Move logo into normal flow */
+    transform: none;
+    margin-bottom: 10px;
+    max-width: 120px;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+
+
+
+    
+</style>
+</head>
+<body>
+<header>
+  <img src="https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/MarinaLOGO.jpg" alt="Seaview Marina Logo">
+  <h1>Seaview Marina Tide Forecast</h1>
+</header>
+
+  <div id="controls">
+    <input type="date" id="dateSelector" />
+    <button id="todayBtn">Today</button>
+    <button id="toggleTableBtn">Hide Tide Table ▼</button>
+  </div>
+
+  <div id="chartWrap">
+    <canvas id="tideChart"></canvas>
+    <div id="lineTooltip" class="tooltip-box"></div>
+  </div>
+
+  <div id="tableContainer" style="display:block;">
+    <table id="tideTable">
+      <thead>
+        <tr><th>Time</th><th>Height (m)</th><th>Type</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Fixed footer -->
+<div style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #004080;
+    background: #fff;
+    padding: 8px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;">
+    Designed and Hosted by Prashanth Hannikeri
+</div>
+
+  
+
+  <div id="notice" class="small">CSV source: <span id="csvUrlDisplay"></span></div>
+
+
+<script>
+/* =========== USER: paste your GitHub raw CSV URL here =========== */
+const CSV_RAW_URL = "https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/tide_data.csv";
+/* ================================================================= */
+
+
+
+document.getElementById('csvUrlDisplay').textContent = CSV_RAW_URL || '(set CSV_RAW_URL in the HTML)';
+
+const dateSelector = document.getElementById('dateSelector');
+const tbody = document.querySelector('#tideTable tbody');
+const toggleBtn = document.getElementById('toggleTableBtn');
+const tableContainer = document.getElementById('tableContainer');
+const tooltip = document.getElementById('lineTooltip');
+
+let rawRows = [];                 // parsed CSV rows as arrays
+let dayMap = new Map();           // Map of dateKey (YYYY-MM-DD) => array of {tStr, h}
+let availableDates = [];          // list of date keys
+let dataPoints = [];              // sampled points for current day (every 15m)
+let highLowPoints = [];           // detected high/low points for current day
+
+// Helper: detect delimiter and parse CSV text
+  // Returns YYYY-MM-DD in LOCAL timezone (NZ)
+function getLocalISODate() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function parseCSV(text){
+  // trim and split lines
+  const lines = text.trim().split(/\r?\n/).filter(l=>l.trim().length>0);
+  if(lines.length === 0) return [];
+  // detect delimiter by header
+  const header = lines[0];
+  let delim = ',';
+  if(header.indexOf('\t') !== -1) delim = '\t';
+  else if(header.indexOf(';') !== -1) delim = ';';
+  else delim = ',';
+  return lines.map(line => line.split(delim).map(cell => cell.trim()));
+}
+
+// Convert date in CSV like "1/01/2025" into ISO date "2025-01-01"
+function csvDateToISO(dStr){
+  const parts = dStr.split('/');
+  if (parts.length < 3) return null;
+
+  const day = parts[0].padStart(2, '0');
+  const month = parts[1].padStart(2, '0');
+  const year = parts[2];
+
+  // Force NZ local time by using midday instead of midnight (prevents UTC shifting)
+  const tempDate = new Date(`${year}-${month}-${day}T12:00:00`);
+
+  const yyyy = tempDate.getFullYear();
+  const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(tempDate.getDate()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// Convert time strings like "0:17" or "06:36" to "HH:MM"
+function normalizeTime(tStr){
+  if(!tStr) return null;
+  const parts = tStr.split(':');
+  if(parts.length === 1) parts.push('00');
+  const hh = parts[0].padStart(2,'0');
+  const mm = parts[1].padStart(2,'0');
+  return `${hh}:${mm}`;
+}
+
+// Build dayMap from parsed CSV rows
+function buildDayMap(rows){
+  dayMap.clear();
+  availableDates = [];
+  // first row might be header - try to detect header by non-date in first column
+  let startIndex = 0;
+  if(rows.length===0) return;
+  if(!rows[0][0].match(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/)) startIndex = 1;
+  for(let i=startIndex;i<rows.length;i++){
+    const r = rows[i];
+    if(r.length < 2) continue;
+    const dateRaw = r[0];
+    const iso = csvDateToISO(dateRaw);
+    if(!iso) continue;
+    const entries = [];
+    // Expect Time1,Tide1 ... up to 4 pairs
+    for(let k=1;k+1<r.length;k+=2){
+      const t = r[k];
+      const h = r[k+1];
+      if(t && h){
+        const nt = normalizeTime(t);
+        const nh = parseFloat(h);
+        if(!isNaN(nh)) entries.push({time:nt, height:nh});
+      }
+    }
+    // sort by time
+    entries.sort((a,b)=> {
+      const A = a.time;
+      const B = b.time;
+      return A.localeCompare(B);
+    });
+    dayMap.set(iso, entries);
+    availableDates.push(iso);
+  }
+  // sort availableDates
+  availableDates.sort();
+}
+
+// Helper to get previous date ISO and next date ISO
+function addDaysISO(iso,delta){
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate()+delta);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// For a target date, build "known" tide events as absolute timestamps (ms) across previous day through next day
+function buildKnownEventsForDate(dateISO){
+  // We'll include:
+  // - last tide(s) from previous day with timestamp on previous date
+  // - all tides from current date (timestamps on that date)
+  // - first tide(s) from next day (timestamp on next date)
+  const prev = addDaysISO(dateISO, -1);
+  const next = addDaysISO(dateISO, +1);
+  const ev = [];
+
+  function pushDay(iso, tag){
+    const arr = dayMap.get(iso) || [];
+    arr.forEach(item=>{
+      const dtStr = `${iso}T${item.time}`;
+      ev.push({t:new Date(dtStr), h:item.height, dayIso:iso});
+    });
+  }
+  pushDay(prev);   // previous day's tides
+  pushDay(dateISO); // current
+  pushDay(next);   // next
+  // sort by time
+  ev.sort((a,b)=> +a.t - +b.t);
+  return ev;
+}
+
+// build sampled points every 'stepMins' minutes from midnight of dateISO to end of that day
+function sampleDay(dateISO, stepMins=5){ // smaller step for smoother curve
+  const events = buildKnownEventsForDate(dateISO);
+  if(events.length < 2) return [];
+
+  const start = new Date(dateISO + 'T00:00:00');
+  const end = new Date(dateISO + 'T23:59:59');
+  const sampled = [];
+
+  for(let ms = +start; ms <= +end; ms += stepMins*60*1000){
+    // find nearest tide points before and after
+    let prev = events[0], next = events[events.length-1];
+    for(let i=0;i<events.length-1;i++){
+      if(+events[i].t <= ms && ms <= +events[i+1].t){
+        prev = events[i]; 
+        next = events[i+1]; 
+        break;
+      }
+    }
+    const t0 = +prev.t, t1 = +next.t;
+    const y0 = prev.h, y1 = next.h;
+
+    // Smooth sinusoidal approximation
+    const ratio = (ms - t0)/(t1 - t0 || 1);
+    const y = y0 + (y1 - y0)*(0.5 - 0.5*Math.cos(Math.PI*ratio)); // smooth curve
+    sampled.push({x:new Date(ms), y:parseFloat(y.toFixed(3))});
+  }
+  return sampled;
+}
+
+
+// detect local highs and lows in sampled data (simple neighbor compare)
+function detectHighLow(sampled){
+  const peaks = [];
+  for(let i=1;i<sampled.length-1;i++){
+    const prev = sampled[i-1].y, cur = sampled[i].y, next = sampled[i+1].y;
+    if(cur > prev && cur > next) peaks.push({...sampled[i],type:'High'});
+    if(cur < prev && cur < next) peaks.push({...sampled[i],type:'Low'});
+  }
+  // filter to keep only those peaks that belong to the requested date (we'll filter later)
+  return peaks;
+}
+
+/* ================= Chart & UI setup ================= */
+
+let markerTime = new Date();
+let isDragging = false;
+
+// Chart plugin for vertical line and tooltip
+const verticalLinePlugin = {
+  id: 'verticalLinePlugin',
+  afterDraw(chart){
+    const xScale = chart.scales.x, yScale = chart.scales.y;
+    if(!xScale || !yScale) return;
+    const ctx = chart.ctx;
+    const x = xScale.getPixelForValue(markerTime);
+    // if NaN skip
+    if(!isFinite(x)) return;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, yScale.top);
+    ctx.lineTo(x, yScale.bottom);
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // draw small circle at interpolated height
+    const s = sampleAt(markerTime);
+    const y = yScale.getPixelForValue(s.y);
+    ctx.fillStyle = 'red';
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // Tooltip content and position (placed just above the marker)
+    let trend = 'Stable';
+    if(s.slope > 0.01) trend = 'Rising';
+    else if(s.slope < -0.01) trend = 'Falling';
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong>${s.x.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</strong><br>${s.y.toFixed(2)} m — ${trend}`;
+    // position relative to chart container
+     tooltip.style.left = x + 'px';
+tooltip.style.top = y - 18 + 'px';
+tooltip.style.display = 'block';
+
+  }
+};
+
+// returns interpolated value & slope (m per hour) at given Date/time
+function sampleAt(time){
+  const timeMs = +new Date(time);
+  if(!dataPoints || dataPoints.length===0) return {x:new Date(timeMs), y:0, slope:0};
+  // binary search to find surrounding sample points
+  let lo=0, hi=dataPoints.length-1;
+  while(lo < hi){
+    const mid = Math.floor((lo+hi)/2);
+    if(+dataPoints[mid].x <= timeMs) lo = mid+1;
+    else hi = mid;
+  }
+  let idx = Math.max(1, lo);
+  if(idx >= dataPoints.length) idx = dataPoints.length-1;
+  const a = dataPoints[idx-1], b = dataPoints[idx];
+  const t0 = +a.x, t1 = +b.x;
+  const ratio = (timeMs - t0) / (t1 - t0 || 1);
+  const y = a.y + (b.y - a.y) * ratio;
+  // slope per hour
+  const slope = (b.y - a.y) / ((t1 - t0) / 3600000 || 1);
+  return {x: new Date(timeMs), y, slope};
+}
+
+// Chart initialisation
+const ctx = document.getElementById('tideChart').getContext('2d');  
+// water gradient (under tide line)
+const waterGradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+waterGradient.addColorStop(0, 'rgba(0,123,255,0.3)');
+waterGradient.addColorStop(1, 'rgba(0,123,255,0.5)');
+
+
+   
+// plugin to draw sky + clouds above tide
+const skyPlugin = { 
+  id: 'skyPlugin',
+  beforeDatasetsDraw(chart, args, options) {
+    const {ctx, chartArea: {top, bottom, left, right}} = chart;
+
+    // draw sky
+    ctx.save();
+    ctx.fillStyle = '#87CEEB'; //sky blue
+    ctx.fillRect(left, top, right-left, bottom-top);
+      ctx.restore();
+  }
+};
+
+   
+
+  
+ // create chart
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+       label: 'Tide height (m)',
+       data: [], // fill later with sampled points
+       borderColor: '#007bff',
+       backgroundColor: waterGradient,
+       tension: 0.5,
+       pointRadius: 0.5,
+       fill: true
+      },
+      {
+      label: 'High/Low',
+        data: [],
+        pointRadius: 6,
+        showLine: false,
+        backgroundColor: [],
+        borderColor: []
+        }
+      ]
+        },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      scales: {
+      x: { type:'time', time:{ unit:'hour', displayFormats:{ hour:'HH:mm'}}, title:{display:true,text:'Time'} },
+      y: { title:{display:true,text:'Height (m)'}, min:0, max:2.5}
+      },
+      plugins: { legend:{display:false}, tooltip:{enabled:false} }        
+    },
+    plugins: [skyPlugin, verticalLinePlugin]
+  });
+  
+ 
+  
+  
+
+
+/* ====== Interaction: drag vertical line ====== */
+const canvas = chart.canvas;
+function pixelToTime(px){ return chart.scales.x.getValueForPixel(px); }
+
+canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  markerTime = pixelToTime(e.offsetX);
+  chart.draw();
+});
+canvas.addEventListener('mousemove', e => {
+  if(isDragging){
+    markerTime = pixelToTime(e.offsetX);
+    chart.draw();
+  }
+});
+window.addEventListener('mouseup', e => {
+  if(isDragging){
+    isDragging = false;
+    
+/* ===== Touch support for mobile devices ===== */
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  isDragging = true;
+  markerTime = pixelToTime(x);
+  chart.draw();
+});
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (isDragging) {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    markerTime = pixelToTime(x);
+    chart.draw();
+  }
+});
+
+canvas.addEventListener('touchend', () => {
+  if (isDragging) {
+    isDragging = false;
+
+    // same animation as mouse release
+    const start = +markerTime;
+    const end = +new Date();
+    const t0 = performance.now();
+    function step(now){
+      const elapsed = now - t0;
+      const frac = Math.min(1, elapsed / 700);
+      const ease = 1 - Math.pow(1-frac, 2);
+      markerTime = new Date(start + (end - start) * ease);
+      chart.draw();
+      if(frac < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+});
+
+    
+    // animate markerTime back to current time
+    const start = +markerTime;
+    const end = +new Date();
+    const t0 = performance.now();
+    function step(now){
+      const elapsed = now - t0;
+      const frac = Math.min(1, elapsed / 700);
+      const ease = 1 - Math.pow(1-frac, 2);
+      markerTime = new Date(start + (end - start) * ease);
+      chart.draw();
+      if(frac < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+});
+
+// keep marker synced to current time when not dragging
+setInterval(()=>{ if(!isDragging) { markerTime = new Date(); chart.draw(); } }, 30000);
+
+/* ============ Table toggle ============ */
+toggleBtn.addEventListener('click', ()=>{
+  if(tableContainer.style.display === 'none'){
+    tableContainer.style.display = 'block';
+    toggleBtn.textContent = 'Hide Tide Table ▲';
+  } else {
+    tableContainer.style.display = 'none';
+    toggleBtn.textContent = 'Show Tide Table ▼';
+  }
+});
+
+/* ============ CSV load and wiring ============ */
+
+async function loadAndInit(){
+  if(!CSV_RAW_URL || CSV_RAW_URL.includes('PASTE_RAW')) {
+    alert('Please set CSV_RAW_URL variable in the HTML to your GitHub raw CSV URL.');
+    return;
+  }
+  try {
+    const res = await fetch(CSV_RAW_URL);
+    if(!res.ok) throw new Error('Failed to fetch CSV: ' + res.status);
+    const txt = await res.text();
+    rawRows = parseCSV(txt);
+    buildDayMap(rawRows);
+    // set date selector to first available or today if present
+    const todayISO = getLocalISODate();
+    if(dayMap.has(todayISO)) dateSelector.value = todayISO;
+    else if(availableDates.length>0) dateSelector.value = availableDates[0];
+    else dateSelector.value = todayISO;
+    // initial render
+    renderForDate(dateSelector.value);
+  } catch(err){
+    console.error(err);
+    alert('Failed to load CSV. Check the raw URL and CORS permissions (raw.githubusercontent.com should be fine). See console for details.');
+  }
+}
+
+function renderForDate(dateISO){
+  // sample the day
+  // sample the day
+dataPoints = sampleDay(dateISO, 5);
+
+// include CSV tide points for peak detection
+const rawTides = dayMap.get(dateISO) || [];
+const peaksFromCSV = rawTides.map(p => ({
+  x: new Date(`${dateISO}T${p.time}`),
+  y: p.height,
+  type: null
+}));
+
+// detect highs/lows in sampled data
+const sampledPeaks = detectHighLow(dataPoints);
+
+// merge CSV points to ensure original highs/lows are included
+highLowPoints = [...sampledPeaks, ...peaksFromCSV];
+
+// determine type (High/Low) using neighbour comparison on sampled points
+highLowPoints.forEach(p=>{
+  const neighbours = dataPoints.filter(dp => Math.abs(+dp.x - +p.x) <= 60*60*1000); // ±1hr
+  if(neighbours.length < 3) return;
+  const cur = p.y, prev = neighbours[0].y, next = neighbours[neighbours.length-1].y;
+  if(cur >= prev && cur >= next) p.type='High';
+  else if(cur <= prev && cur <= next) p.type='Low';
+  else p.type='Low'; // fallback
+});
+
+// keep only High/Low points
+highLowPoints = highLowPoints.filter(p => p.type==='High' || p.type==='Low');
+
+// update chart main dataset
+chart.data.datasets[0].data = dataPoints.map(p => ({x: p.x, y: p.y}));
+
+// update peaks dataset for visual markers
+chart.data.datasets[1].data = highLowPoints.map(p => {
+  // snap y to nearest sampled y
+  const nearest = dataPoints.reduce((a,b)=> Math.abs(+b.x - +p.x) < Math.abs(+a.x - +p.x)? b:a);
+  return {x:p.x, y:nearest.y};
+});
+
+// set colours for peaks
+chart.data.datasets[1].backgroundColor = highLowPoints.map(p => p.type === 'High' ? 'green' : 'orange');
+chart.data.datasets[1].borderColor = highLowPoints.map(p => p.type === 'High' ? 'green' : 'orange');
+
+// rebuild table showing High & Low
+tbody.innerHTML = '';
+if(highLowPoints.length === 0){
+  tbody.innerHTML = `<tr><td colspan="3">No high/low points detected for this date</td></tr>`;
+} else {
+  highLowPoints.sort((a,b)=> +a.x - +b.x);
+  highLowPoints.forEach(p=>{
+    const tr = document.createElement('tr');
+    const tdTime = document.createElement('td');
+    tdTime.textContent = p.x.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const tdH = document.createElement('td');
+    tdH.textContent = p.y.toFixed(2);
+    const tdType = document.createElement('td');
+    tdType.textContent = p.type;
+    tdType.className = p.type === 'High' ? 'high' : 'low';
+    tr.appendChild(tdTime); tr.appendChild(tdH); tr.appendChild(tdType);
+    tbody.appendChild(tr);
+  });
+}
+
+// set markerTime to current time (so it shows now initially)
+markerTime = new Date();
+chart.update();
+
+}
+
+// date picker change
+dateSelector.addEventListener('change', ()=>{
+  if(!dateSelector.value) return;
+  if(!dayMap.has(dateSelector.value)) {
+    // If chosen day not found in CSV, show message and attempt to still sample (will use neighbours if present)
+    console.warn('Selected date not in CSV, sampling algorithm will attempt interpolation using neighbouring days if available.');
+  }
+  renderForDate(dateSelector.value);
+});
+  const todayBtn = document.getElementById('todayBtn');
+todayBtn.addEventListener('click', () => {
+const todayISO = getLocalISODate();
+  dateSelector.value = todayISO; renderForDate(todayISO);
+});
+
+
+// initial load
+loadAndInit();
+
+</script>
+</body>
+</html>
