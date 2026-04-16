@@ -717,8 +717,24 @@ highLowPoints = rawTides
   .sort((a, b) => +a.x - +b.x);
 
 // ✅ Assign High / Low properly (alternating logic)
+// 🔥 FIX: determine first tide using previous day's last tide
+const prevDate = addDaysISO(dateISO, -1);
+const prevTides = dayMap.get(prevDate) || [];
+
+let prevHeight = null;
+
+// get last tide from previous day if exists
+if (prevTides.length > 0) {
+  prevHeight = prevTides[prevTides.length - 1].height;
+}
+
 for (let i = 0; i < highLowPoints.length; i++) {
-  if (i === 0) {
+  if (i === 0 && prevHeight !== null) {
+    // compare with previous day's last tide
+    highLowPoints[i].type =
+      highLowPoints[i].y > prevHeight ? 'High' : 'Low';
+  } else if (i === 0) {
+    // fallback if no previous day data
     highLowPoints[i].type = 'High';
   } else {
     highLowPoints[i].type =
