@@ -502,8 +502,8 @@ const skyPlugin = {
       animation: false,
       scales: {
       x: { type:'time', time:{ unit:'hour', displayFormats:{ hour:'HH:mm'}}, title:{display:true,text:'Time'} },
-      y: { title:{display:true,text:'Height (m)'}, min:0, max:2.5}
-      },
+      y: { title:{display:true,text:'Height (m)'}, min:0,
+      }
       plugins: { legend:{display:false}, tooltip:{enabled:false} }        
     },
     plugins: [skyPlugin, verticalLinePlugin]
