@@ -744,8 +744,13 @@ if(highLowPoints.length === 0){
     const tdH = document.createElement('td');
     tdH.textContent = p.y.toFixed(2);
     const tdType = document.createElement('td');
-    tdType.textContent = p.type;
-    tdType.className = p.type === 'High' ? 'high' : 'low';
+    if (p.type === 'High') {
+  tdType.innerHTML = '▲ High';
+  tdType.className = 'high';
+} else {
+  tdType.innerHTML = '▼ Low';
+  tdType.className = 'low';
+}
     tr.appendChild(tdTime); tr.appendChild(tdH); tr.appendChild(tdType);
     tbody.appendChild(tr);
   });
