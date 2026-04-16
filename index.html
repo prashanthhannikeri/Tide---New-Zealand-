@@ -128,6 +128,7 @@ header h1 {
 
   <div id="controls">
     <input type="date" id="dateSelector" />
+    <select id="locationSelector"></select>
     <button id="todayBtn">Today</button>
     <button id="toggleTableBtn">Hide Tide Table ▼</button>
   </div>
@@ -169,8 +170,21 @@ header h1 {
 
 <script>
 /* =========== USER: paste your GitHub raw CSV URL here =========== */
-const CSV_RAW_URL = "https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/tide_data.csv";
-/* ================================================================= */
+/*const CSV_RAW_URL = "https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/tide_data.csv"; */
+
+const LOCATIONS = {
+  "Auckland": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_auckland.csv",
+  "Wellington": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_wellington.csv",
+  "Castelepoint": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_castelepoint.csv",
+   "Denedin": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_denedin.csv",
+   "Gisborne": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_gisborne.csv",
+   "Invercargil": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_invercargil.csv",
+   "Kaikoura": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_kaikoura.csv",
+   "Lottin Point": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_lottin%20point.csv",
+  
+ 
+  
+  /* ================================================================= */
 
 
 
@@ -181,6 +195,15 @@ const tbody = document.querySelector('#tideTable tbody');
 const toggleBtn = document.getElementById('toggleTableBtn');
 const tableContainer = document.getElementById('tableContainer');
 const tooltip = document.getElementById('lineTooltip');
+
+  const locationSelector = document.getElementById('locationSelector');
+
+Object.keys(LOCATIONS).forEach(loc => {
+  const option = document.createElement('option');
+  option.value = loc;
+  option.textContent = loc;
+  locationSelector.appendChild(option);
+});
 
 let rawRows = [];                 // parsed CSV rows as arrays
 let dayMap = new Map();           // Map of dateKey (YYYY-MM-DD) => array of {tStr, h}
@@ -585,27 +608,24 @@ toggleBtn.addEventListener('click', ()=>{
 
 /* ============ CSV load and wiring ============ */
 
-async function loadAndInit(){
-  if(!CSV_RAW_URL || CSV_RAW_URL.includes('PASTE_RAW')) {
-    alert('Please set CSV_RAW_URL variable in the HTML to your GitHub raw CSV URL.');
-    return;
-  }
+async function loadAndInit(csvUrl){
   try {
-    const res = await fetch(CSV_RAW_URL);
+    const res = await fetch(csvUrl);
     if(!res.ok) throw new Error('Failed to fetch CSV: ' + res.status);
+
     const txt = await res.text();
     rawRows = parseCSV(txt);
     buildDayMap(rawRows);
-    // set date selector to first available or today if present
+
     const todayISO = getLocalISODate();
     if(dayMap.has(todayISO)) dateSelector.value = todayISO;
     else if(availableDates.length>0) dateSelector.value = availableDates[0];
-    else dateSelector.value = todayISO;
-    // initial render
+
     renderForDate(dateSelector.value);
+
   } catch(err){
     console.error(err);
-    alert('Failed to load CSV. Check the raw URL and CORS permissions (raw.githubusercontent.com should be fine). See console for details.');
+    alert('Failed to load CSV.');
   }
 }
 
@@ -696,9 +716,20 @@ const todayISO = getLocalISODate();
   dateSelector.value = todayISO; renderForDate(todayISO);
 });
 
+locationSelector.addEventListener('change', () => {
+  const selectedLocation = locationSelector.value;
+  const url = LOCATIONS[selectedLocation];
+
+  document.getElementById('csvUrlDisplay').textContent = url;
+
+  loadAndInit(url);
+});
+  
 
 // initial load
-loadAndInit();
+const defaultLocation = Object.keys(LOCATIONS)[0];
+locationSelector.value = defaultLocation;
+loadAndInit(LOCATIONS[defaultLocation]);
 
 </script>
 </body>
