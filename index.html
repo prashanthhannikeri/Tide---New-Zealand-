@@ -716,15 +716,29 @@ highLowPoints = rawTides
   }))
   .sort((a, b) => +a.x - +b.x);
 
-// 🔥 FIX: assign High / Low properly (alternating logic)
-for (let i = 0; i < highLowPoints.length; i++) {
-  if (i === 0) {
-    highLowPoints[i].type = 'High';
-  } else {
-    highLowPoints[i].type =
-      highLowPoints[i].y > highLowPoints[i - 1].y ? 'High' : 'Low';
+// robust High/Low detection using neighbours (true peak detection)
+highLowPoints = highLowPoints.map((p, i, arr) => {
+  const prev = arr[i - 1];
+  const next = arr[i + 1];
+
+  if (!prev || !next) {
+    p.type = null; // skip edges
+    return p;
   }
-}
+
+  if (p.y > prev.y && p.y > next.y) {
+    p.type = 'High';
+  } else if (p.y < prev.y && p.y < next.y) {
+    p.type = 'Low';
+  } else {
+    p.type = null;
+  }
+
+  return p;
+});
+
+// keep only valid peaks
+highLowPoints = highLowPoints.filter(p => p.type);
 
 // update chart main dataset
 chart.data.datasets[0].data = dataPoints.map(p => ({x: p.x, y: p.y}));
