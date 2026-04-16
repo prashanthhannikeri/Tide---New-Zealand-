@@ -246,11 +246,13 @@ const tooltip = document.getElementById('lineTooltip');
 
   const locationSelector = document.getElementById('locationSelector');
 
-Object.keys(LOCATIONS).forEach(loc => { 
-  const option = document.createElement('option'); 
-  option.value = loc; 
-  option.textContent = loc; 
-  locationSelector.appendChild(option); 
+Object.keys(LOCATIONS)
+  .sort((a, b) => a.localeCompare(b)) // sorts A → Z
+  .forEach(loc => { 
+    const option = document.createElement('option'); 
+    option.value = loc; 
+    option.textContent = loc; 
+    locationSelector.appendChild(option); 
 });
 
 let rawRows = [];                 // parsed CSV rows as arrays
