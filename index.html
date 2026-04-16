@@ -739,19 +739,32 @@ if(highLowPoints.length === 0){
   highLowPoints.sort((a,b)=> +a.x - +b.x);
   highLowPoints.forEach(p=>{
     const tr = document.createElement('tr');
+   if (p.type === 'High') {
+      tr.classList.add('row-high');
+    } else {
+      tr.classList.add('row-low');
+    }
+
     const tdTime = document.createElement('td');
     tdTime.textContent = p.x.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
     const tdH = document.createElement('td');
     tdH.textContent = p.y.toFixed(2);
+
     const tdType = document.createElement('td');
+
     if (p.type === 'High') {
-  tdType.innerHTML = '▲ High';
-  tdType.className = 'high';
-} else {
-  tdType.innerHTML = '▼ Low';
-  tdType.className = 'low';
-}
-    tr.appendChild(tdTime); tr.appendChild(tdH); tr.appendChild(tdType);
+      tdType.innerHTML = '▲ High';
+      tdType.className = 'high';
+    } else {
+      tdType.innerHTML = '▼ Low';
+      tdType.className = 'low';
+    }
+
+    tr.appendChild(tdTime);
+    tr.appendChild(tdH);
+    tr.appendChild(tdType);
+
     tbody.appendChild(tr);
   });
 }
