@@ -707,38 +707,30 @@ chart.options.scales.y.max = adjustedMax;
 
 // include CSV tide points for peak detection
 const rawTides = dayMap.get(dateISO) || [];
+const peaksFromCSV = rawTides.map(p => ({
+  x: new Date(`${dateISO}T${p.time}`),
+  y: p.height,
+  type: null
+}));
 
-// build clean tide points from CSV only
-highLowPoints = rawTides
-  .map(p => ({
-    x: new Date(`${dateISO}T${p.time}`),
-    y: p.height
-  }))
-  .sort((a, b) => +a.x - +b.x);
+// detect highs/lows in sampled data
+const sampledPeaks = detectHighLow(dataPoints);
 
-// robust High/Low detection using neighbours (true peak detection)
-highLowPoints = highLowPoints.map((p, i, arr) => {
-  const prev = arr[i - 1];
-  const next = arr[i + 1];
+// merge CSV points to ensure original highs/lows are included
+highLowPoints = [...sampledPeaks, ...peaksFromCSV];
 
-  if (!prev || !next) {
-    p.type = null; // skip edges
-    return p;
-  }
-
-  if (p.y > prev.y && p.y > next.y) {
-    p.type = 'High';
-  } else if (p.y < prev.y && p.y < next.y) {
-    p.type = 'Low';
-  } else {
-    p.type = null;
-  }
-
-  return p;
+// determine type (High/Low) using neighbour comparison on sampled points
+highLowPoints.forEach(p=>{
+  const neighbours = dataPoints.filter(dp => Math.abs(+dp.x - +p.x) <= 60*60*1000); // ±1hr
+  if(neighbours.length < 3) return;
+  const cur = p.y, prev = neighbours[0].y, next = neighbours[neighbours.length-1].y;
+  if(cur >= prev && cur >= next) p.type='High';
+  else if(cur <= prev && cur <= next) p.type='Low';
+  else p.type='Low'; // fallback
 });
 
-// keep only valid peaks
-highLowPoints = highLowPoints.filter(p => p.type);
+// keep only High/Low points
+highLowPoints = highLowPoints.filter(p => p.type==='High' || p.type==='Low');
 
 // update chart main dataset
 chart.data.datasets[0].data = dataPoints.map(p => ({x: p.x, y: p.y}));
