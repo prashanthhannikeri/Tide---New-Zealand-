@@ -706,31 +706,25 @@ const adjustedMax = Math.ceil((maxHeight + 0.2) * 10) / 10; // round to 1 decima
 chart.options.scales.y.max = adjustedMax;
 
 // include CSV tide points for peak detection
+// ✅ USE CSV DATA DIRECTLY (this is the fix)
 const rawTides = dayMap.get(dateISO) || [];
-const peaksFromCSV = rawTides.map(p => ({
-  x: new Date(`${dateISO}T${p.time}`),
-  y: p.height,
-  type: null
-}));
 
-// detect highs/lows in sampled data
-const sampledPeaks = detectHighLow(dataPoints);
+highLowPoints = rawTides
+  .map(p => ({
+    x: new Date(`${dateISO}T${p.time}`),
+    y: p.height
+  }))
+  .sort((a, b) => +a.x - +b.x);
 
-// merge CSV points to ensure original highs/lows are included
-highLowPoints = [...sampledPeaks, ...peaksFromCSV];
-
-// determine type (High/Low) using neighbour comparison on sampled points
-highLowPoints.forEach(p=>{
-  const neighbours = dataPoints.filter(dp => Math.abs(+dp.x - +p.x) <= 60*60*1000); // ±1hr
-  if(neighbours.length < 3) return;
-  const cur = p.y, prev = neighbours[0].y, next = neighbours[neighbours.length-1].y;
-  if(cur >= prev && cur >= next) p.type='High';
-  else if(cur <= prev && cur <= next) p.type='Low';
-  else p.type='Low'; // fallback
-});
-
-// keep only High/Low points
-highLowPoints = highLowPoints.filter(p => p.type==='High' || p.type==='Low');
+// ✅ Assign High / Low properly (alternating logic)
+for (let i = 0; i < highLowPoints.length; i++) {
+  if (i === 0) {
+    highLowPoints[i].type = 'High';
+  } else {
+    highLowPoints[i].type =
+      highLowPoints[i].y > highLowPoints[i - 1].y ? 'High' : 'Low';
+  }
+}
 
 // update chart main dataset
 chart.data.datasets[0].data = dataPoints.map(p => ({x: p.x, y: p.y}));
