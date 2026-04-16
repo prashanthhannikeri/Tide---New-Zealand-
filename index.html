@@ -138,6 +138,22 @@ header h1 {
   #dateSelector:hover {
     background-color: white; /* darker blue on hover */
   }
+
+#prevDayBtn, #nextDayBtn {
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+#prevDayBtn:hover, #nextDayBtn:hover {
+  background-color: #1e7e34;
+}
+  
   
 /* MOBILE LAYOUT */
 @media (max-width: 600px) {
@@ -173,11 +189,13 @@ header h1 {
 </header>
 
   <div id="controls">
-    <input type="date" id="dateSelector" />
-    <select id="locationSelector"></select>
-    <button id="todayBtn">Today</button>
-    <button id="toggleTableBtn">Hide Tide Table ▼</button>
-  </div>
+  <button id="prevDayBtn">◀ Previous Day</button>
+  <input type="date" id="dateSelector" />
+  <button id="nextDayBtn">Next Day ▶</button>
+  <select id="locationSelector"></select>
+  <button id="todayBtn">Today</button>
+  <button id="toggleTableBtn">Hide Tide Table ▼</button>
+</div>
 
   <div id="chartWrap">
     <canvas id="tideChart"></canvas>
@@ -810,6 +828,29 @@ dateSelector.addEventListener('change', ()=>{
   renderForDate(dateSelector.value);
 });
   const todayBtn = document.getElementById('todayBtn');
+  const prevDayBtn = document.getElementById('prevDayBtn');
+const nextDayBtn = document.getElementById('nextDayBtn');
+
+// helper to shift date
+function changeDay(offset) {
+  if (!dateSelector.value) return;
+
+  const current = new Date(dateSelector.value + 'T00:00:00');
+  current.setDate(current.getDate() + offset);
+
+  const yyyy = current.getFullYear();
+  const mm = String(current.getMonth() + 1).padStart(2, '0');
+  const dd = String(current.getDate()).padStart(2, '0');
+
+  const newDate = `${yyyy}-${mm}-${dd}`;
+  dateSelector.value = newDate;
+
+  renderForDate(newDate);
+}
+
+// button actions
+prevDayBtn.addEventListener('click', () => changeDay(-1));
+nextDayBtn.addEventListener('click', () => changeDay(1));
 todayBtn.addEventListener('click', () => {
 const todayISO = getLocalISODate();
   dateSelector.value = todayISO; renderForDate(todayISO);
