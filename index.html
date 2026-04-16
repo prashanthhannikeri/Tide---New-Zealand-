@@ -229,6 +229,16 @@ const tooltip = document.getElementById('lineTooltip');
 
   const locationSelector = document.getElementById('locationSelector');
 
+// 🔹 Add default placeholder option
+const defaultOption = document.createElement('option');
+defaultOption.value = "";
+defaultOption.textContent = "Select Location";
+defaultOption.disabled = true;
+defaultOption.selected = true;
+
+locationSelector.appendChild(defaultOption);
+
+// 🔹 Add actual locations
 Object.keys(LOCATIONS).forEach(loc => {
   const option = document.createElement('option');
   option.value = loc;
