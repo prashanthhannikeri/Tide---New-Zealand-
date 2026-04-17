@@ -504,6 +504,18 @@ const verticalLinePlugin = {
 tooltip.style.top = y - 18 + 'px';
 tooltip.style.display = 'block';
 
+ //   (NEW TEXT LABEL)      //
+
+ctx.save();
+ctx.fillStyle = 'rgba(0,0,0,0.6)';
+ctx.font = '12px Arial';
+ctx.textAlign = 'center';
+
+// place text near top of chart, aligned with red line
+ctx.fillText('Hold & drag to see tide', x, yScale.top + 15);
+
+ctx.restore();
+
   }
 };
 
