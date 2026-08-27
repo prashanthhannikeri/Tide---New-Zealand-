@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,887 +6,2319 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>New Zealand — Tide Forecast</title>
-  
 
-
-  
 <!-- Chart.js and date adapter -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 <style>
-  body { font-family: Arial, sans-serif; background:#f0f8ff; margin:18px; color:#033; }
-  h1 { text-align:center; color:#004080; margin-bottom:6px; }
-  #controls { text-align:center; margin-top:15px; margin-bottom:12px; }
-  #dateSelector { padding:8px; font-size:15px; border-radius:6px; border:1px solid #ccc; }
-  #chartWrap { width:92%; max-width:980px; margin:10px auto; position:relative; }
-  canvas { background:#fff; border-radius:8px; display:block; height:420px; width:100%; }
-  .tooltip-box { position:absolute; pointer-events:none; background:rgba(0,0,0,0.8); color:#fff; padding:6px 10px; border-radius:6px; font-size:13px; display:none; transform:translate(-50%,-100%); white-space:nowrap; }
-  #toggleTableBtn { display:block; margin:10px auto; padding:8px 12px; font-size:14px; cursor:pointer; border-radius:6px; border:1px solid #ccc; background:#fff; }
-  #tableContainer { width:92%; max-width:980px; margin:10px auto; }
-  table { width:100%; border-collapse:collapse; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
-  th, td { padding:8px 10px; text-align:center; border-bottom:1px solid #eee; }
-  th { background:#f7fbff; color:#004080; font-weight:600; }
-  .high { color:green; font-weight:700; }
-  .low { color:orange; font-weight:700; }
-  .highlight { background:rgba(255,0,0,0.08); }
-  .small { font-size:13px; color:#555; }
-  #notice {
-  display: none !important;
+
+  body {
+    font-family: Arial, sans-serif;
+    background:#f0f8ff;
+    margin:18px;
+    color:#033;
   }
+
+  h1 {
+    text-align:center;
+    color:#004080;
+    margin-bottom:6px;
+  }
+
+  #controls {
+    text-align:center;
+    margin-top:15px;
+    margin-bottom:12px;
+  }
+
+  #dateSelector {
+    padding:8px;
+    font-size:15px;
+    border-radius:6px;
+    border:1px solid #ccc;
+  }
+
+  #chartWrap {
+    width:92%;
+    max-width:980px;
+    margin:10px auto;
+    position:relative;
+  }
+
+  canvas {
+    background:#fff;
+    border-radius:8px;
+    display:block;
+    height:420px;
+    width:100%;
+  }
+
+  .tooltip-box {
+    position:absolute;
+    pointer-events:none;
+    background:rgba(0,0,0,0.8);
+    color:#fff;
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:13px;
+    display:none;
+    transform:translate(-50%,-100%);
+    white-space:nowrap;
+  }
+
+  #toggleTableBtn {
+    display:block;
+    margin:10px auto;
+    padding:8px 12px;
+    font-size:14px;
+    cursor:pointer;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background:#fff;
+  }
+
+  #tableContainer {
+    width:92%;
+    max-width:980px;
+    margin:10px auto;
+  }
+
+  table {
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  th, td {
+    padding:8px 10px;
+    text-align:center;
+    border-bottom:1px solid #eee;
+  }
+
+  th {
+    background:#f7fbff;
+    color:#004080;
+    font-weight:600;
+  }
+
+  .high {
+    color:green;
+    font-weight:700;
+  }
+
+  .low {
+    color:orange;
+    font-weight:700;
+  }
+
+  .highlight {
+    background:rgba(255,0,0,0.08);
+  }
+
+  .small {
+    font-size:13px;
+    color:#555;
+  }
+
+  #notice {
+    display:none !important;
+  }
+
   /* Row colouring for tide table */
-.row-high {
-  background-color: rgba(0, 128, 0, 0.08);
-}
 
-.row-low {
-  background-color: rgba(255, 165, 0, 0.08);
-}
+  .row-high {
+    background-color:rgba(0,128,0,0.08);
+  }
+
+  .row-low {
+    background-color:rgba(255,165,0,0.08);
+  }
+
   .row-high td {
-  color: green;
-}
+    color:green;
+  }
 
-.row-low td {
-  color: darkorange;
-}
+  .row-low td {
+    color:darkorange;
+  }
 
-body {
-  background-image: url("https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/new%20background.jpg");
-  background-size: cover;       /* Fill entire page */
-  background-position: center;  /* Centre the image */
-  background-repeat: no-repeat; /* Prevent tiling */
-  background-attachment: fixed; /* Optional: parallax effect */
-  padding-top: 30px;
-  padding-bottom: 60px;  /* Adjust to match footer height */
+  body {
+    background-image:url("https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/new%20background.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    padding-top:30px;
+    padding-bottom:60px;
+  }
 
-}
+  /* Desktop Layout */
 
-  
-/* Desktop Layout */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;   /* Centre title */
-  position: relative;        /* Allow absolute-position logo */
-  margin-top: 15px 0;
-  margin-bottom: 15px 0;
-  text-align: center;
-}
+  header {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    margin-top:15px;
+    margin-bottom:15px;
+    text-align:center;
+  }
 
-/* Logo positioned left */
-header img {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 120px;
-  height: auto;
-}
+  /* Logo positioned left */
 
-/* Title styling */
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #004080; /* Blue text */
-  background: white; /* White background */
-  padding: 5px 12px; /* Add some spacing around text */
-  border-radius: 6px; /* Optional: rounded corners */
-  display: inline-block; /* Prevent background from stretching full width */
-  text-align: center;
-}
+  header img {
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    max-width:120px;
+    height:auto;
+  }
 
-    /* Add this for Today button */
+  /* Title styling */
+
+  header h1 {
+    margin:0;
+    font-size:2rem;
+    color:#004080;
+    background:white;
+    padding:5px 12px;
+    border-radius:6px;
+    display:inline-block;
+    text-align:center;
+  }
+
+  /* Today button */
+
   #todayBtn {
-    padding: 10px 16px;       /* bigger padding */
-    font-size: 16px;          /* larger text */
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background-color: #007bff; /* blue background */
-    color: white;             /* white text */
-    cursor: pointer;
-    margin-left: 8px;         /* spacing from date picker */
+    padding:10px 16px;
+    font-size:16px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background-color:#007bff;
+    color:white;
+    cursor:pointer;
+    margin-left:8px;
   }
 
   #todayBtn:hover {
-    background-color: #0056b3; /* darker blue on hover */
+    background-color:#0056b3;
   }
 
-
-#locationSelector {
-  padding: 10px 16px;       /* bigger padding */
-    font-size: 16px;          /* larger text */
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background-color: #007bff; /* blue background */
-    color: white;             /* white text */
-    cursor: pointer;
-    margin-left: 8px;         /* spacing from date picker */
-}
-
- #locationSelector:hover {
-    background-color: #0056b3; /* darker blue on hover */
+  #locationSelector {
+    padding:10px 16px;
+    font-size:16px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background-color:#007bff;
+    color:white;
+    cursor:pointer;
+    margin-left:8px;
   }
-  
+
+  #locationSelector:hover {
+    background-color:#0056b3;
+  }
+
   #dateSelector {
-  padding: 10px 16px;       /* bigger padding */
-    font-size: 16px;          /* larger text */
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background-color: white; /* background */
-    color: black;             /* white text */
-    cursor: pointer;
-    margin-left: 8px;         /* spacing from date picker */
-}
+    padding:10px 16px;
+    font-size:16px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background-color:white;
+    color:black;
+    cursor:pointer;
+    margin-left:8px;
+  }
 
   #dateSelector:hover {
-    background-color: white; /* darker blue on hover */
+    background-color:white;
   }
 
-#prevDayBtn, #nextDayBtn {
-  padding: 8px 14px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
-  margin-left: 8px;
-}
-
-#prevDayBtn:hover, #nextDayBtn:hover {
-  background-color: #1e7e34;
-}
-  
-  
-/* MOBILE LAYOUT */
-@media (max-width: 600px) {
-  header {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: static;     /* Reset position */
+  #prevDayBtn,
+  #nextDayBtn {
+    padding:8px 14px;
+    font-size:14px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    background-color:#28a745;
+    color:white;
+    cursor:pointer;
+    margin-left:8px;
   }
 
-  header img {
-    position: static;     /* Move logo into normal flow */
-    transform: none;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    max-width: 120px;
+  #prevDayBtn:hover,
+  #nextDayBtn:hover {
+    background-color:#1e7e34;
   }
 
-  header h1 {
-    font-size: 1.6rem;
+
+  /* =========================================================
+     APP DOWNLOAD BANNER
+     ========================================================= */
+
+  .app-banner {
+    width:92%;
+    max-width:980px;
+    margin:25px auto 80px auto;
+    padding:22px 20px;
+    box-sizing:border-box;
+    background:rgba(255,255,255,0.96);
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.15);
+    text-align:center;
   }
-}
+
+  .app-banner h2 {
+    margin:0 0 7px 0;
+    color:#004080;
+    font-size:1.45rem;
+  }
+
+  .app-banner p {
+    margin:5px 0 17px 0;
+    color:#444;
+    font-size:15px;
+  }
+
+  .app-buttons {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .app-store-button,
+  .google-play-button {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:210px;
+    padding:12px 18px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:600;
+    box-sizing:border-box;
+    transition:transform 0.2s ease,
+               box-shadow 0.2s ease;
+  }
+
+  .app-store-button {
+    background:#000;
+    color:#fff;
+  }
+
+  .google-play-button {
+    background:#01875f;
+    color:#fff;
+  }
+
+  .app-store-button:hover,
+  .google-play-button:hover {
+    transform:translateY(-2px);
+    box-shadow:0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  .store-symbol {
+    font-size:22px;
+    margin-right:10px;
+    line-height:1;
+  }
 
 
+  /* =========================================================
+     MOBILE LAYOUT
+     ========================================================= */
 
+  @media (max-width:600px) {
 
-    
+    header {
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      position:static;
+    }
+
+    header img {
+      position:static;
+      transform:none;
+      margin-top:10px;
+      margin-bottom:10px;
+      max-width:120px;
+    }
+
+    header h1 {
+      font-size:1.6rem;
+    }
+
+    /* App banner on mobile */
+
+    .app-banner {
+      width:92%;
+      padding:18px 12px;
+      margin-top:20px;
+      margin-bottom:80px;
+    }
+
+    .app-banner h2 {
+      font-size:1.25rem;
+    }
+
+    .app-banner p {
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .app-buttons {
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .app-store-button,
+    .google-play-button {
+      width:100%;
+      max-width:280px;
+    }
+  }
+
 </style>
 </head>
+
+
 <body>
+
 <header>
-  <img src="https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/Tide%20logo%20PH%20.jpg">
+
+  <img
+    src="https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/Tide%20logo%20PH%20.jpg"
+    alt="New Zealand Tides logo"
+  >
+
   <h1>New Zealand Tide Forecast</h1>
+
 </header>
 
-  <div id="controls">
-  <button id="prevDayBtn">◀ Previous Day</button>
-  <input type="date" id="dateSelector" />
-  <button id="nextDayBtn">Next Day ▶</button>
+
+<div id="controls">
+
+  <button id="prevDayBtn">
+    ◀ Previous Day
+  </button>
+
+  <input
+    type="date"
+    id="dateSelector"
+  />
+
+  <button id="nextDayBtn">
+    Next Day ▶
+  </button>
+
   <select id="locationSelector"></select>
-  <button id="todayBtn">Today</button>
-  <button id="toggleTableBtn">Hide Tide Table ▼</button>
+
+  <button id="todayBtn">
+    Today
+  </button>
+
+  <button id="toggleTableBtn">
+    Hide Tide Table ▼
+  </button>
+
 </div>
 
-  <div id="chartWrap">
-    <canvas id="tideChart"></canvas>
-    <div id="lineTooltip" class="tooltip-box"></div>
+
+<div id="chartWrap">
+
+  <canvas id="tideChart"></canvas>
+
+  <div
+    id="lineTooltip"
+    class="tooltip-box">
   </div>
 
-  <div id="tableContainer" style="display:block;">
-    <table id="tideTable">
-      <thead>
-        <tr><th>Time</th><th>Height (m)</th><th>Type</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+</div>
+
+
+<div
+  id="tableContainer"
+  style="display:block;"
+>
+
+  <table id="tideTable">
+
+    <thead>
+
+      <tr>
+        <th>Time</th>
+        <th>Height (m)</th>
+        <th>Type</th>
+      </tr>
+
+    </thead>
+
+    <tbody></tbody>
+
+  </table>
+
+</div>
+
+
+<!-- =========================================================
+     NEW ZEALAND TIDES APP PROMOTION
+     ========================================================= -->
+
+<div class="app-banner">
+
+  <h2>
+    Take New Zealand Tides With You
+  </h2>
+
+  <p>
+    Get the <strong>New Zealand Tides</strong> app for
+    iPhone and Android. Check tide times and charts
+    wherever you are.
+  </p>
+
+  <div class="app-buttons">
+
+    <!-- Apple App Store -->
+
+    <a
+      class="app-store-button"
+      href="https://apps.apple.com/nz/app/new-zealand-tides/id6781606469"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+
+      <span class="store-symbol"></span>
+
+      Download on the App Store
+
+    </a>
+
+
+    <!-- Google Play -->
+
+    <a
+      class="google-play-button"
+      href="https://play.google.com/store/apps/details?id=com.prashanthhannikeri.newzealandtides"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+
+      <span class="store-symbol">▶</span>
+
+      Get it on Google Play
+
+    </a>
+
   </div>
 
-  <!-- Fixed footer -->
+</div>
+
+
+<!-- =========================================================
+     FIXED FOOTER
+     ========================================================= -->
+
 <div style="
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    color: #004080;
-    background: #fff;
-    padding: 8px 0;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;">
-    Designed and Hosted by Prashanth Hannikeri
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    text-align:center;
+    font-size:12px;
+    color:#004080;
+    background:#fff;
+    padding:8px 0;
+    box-shadow:0 -2px 5px rgba(0,0,0,0.1);
+    z-index:1000;
+">
+
+  Designed and Hosted by Prashanth Hannikeri
+
 </div>
 
-  
 
-  <div id="notice" class="small">CSV source: <span id="csvUrlDisplay"></span></div>
+<div
+  id="notice"
+  class="small"
+>
+  CSV source:
+  <span id="csvUrlDisplay"></span>
+</div>
 
 
 <script>
-/* =========== USER: paste your GitHub raw CSV URL here =========== */
-/*const CSV_RAW_URL = "https://raw.githubusercontent.com/prashanthhannikeri/Seaview-Marina---Tide/refs/heads/main/tide_data.csv"; */
+
+/* =========================================================
+   CSV LOCATIONS
+   ========================================================= */
 
 const LOCATIONS = {
-  "Auckland":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_auckland.csv",
-  "Wellington":        "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_wellington.csv",
-  "Castelepoint":      "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_castelepoint.csv",
-  "Dunedin":           "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_dunedin.csv",
-  "Gisborne":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_gisborne.csv",
-  "Invercargil":       "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_invercargil.csv",
-  "Kaikoura":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_kaikoura.csv",
-  "Lottin Point":      "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_lottin%20point.csv",
-  "Nelson":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
-  "New Brighton Pier": "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_new%20brighton%20pier.csv",
-  "North Cape":        "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
-  "Paratutae Islnad":  "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_paratutae%20islnad.csv",
-  "Picton":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_picton.csv",
-  "Reglan":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_reglan.csv",
-  "Taranaki":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_taranaki.csv",
-  "Thames":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_thames.csv",
-  "Timaru":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_timaru.csv",
-  "Westport":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_westport.csv",
-  "Whanganui":         "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whanganui.csv",
-  "Whangarei":         "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whangarei.csv",
-  "Mana Marina":       "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_mana%20marina.csv",
-  "Napier":            "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_napier.csv",
-  "Tauranga":          "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_tauranga.csv",
-  
-  
-  
+
+  "Auckland":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_auckland.csv",
+
+  "Wellington":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_wellington.csv",
+
+  "Castelepoint":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_castelepoint.csv",
+
+  "Dunedin":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_dunedin.csv",
+
+  "Gisborne":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_gisborne.csv",
+
+  "Invercargil":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_invercargil.csv",
+
+  "Kaikoura":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_kaikoura.csv",
+
+  "Lottin Point":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_lottin%20point.csv",
+
+  "Nelson":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
+
+  "New Brighton Pier":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_new%20brighton%20pier.csv",
+
+  "North Cape":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
+
+  "Paratutae Islnad":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_paratutae%20islnad.csv",
+
+  "Picton":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_picton.csv",
+
+  "Reglan":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_reglan.csv",
+
+  "Taranaki":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_taranaki.csv",
+
+  "Thames":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_thames.csv",
+
+  "Timaru":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_timaru.csv",
+
+  "Westport":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_westport.csv",
+
+  "Whanganui":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whanganui.csv",
+
+  "Whangarei":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whangarei.csv",
+
+  "Mana Marina":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_mana%20marina.csv",
+
+  "Napier":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_napier.csv",
+
+  "Tauranga":
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_tauranga.csv"
+
 };
-  
-  /* ================================================================= */
 
 
+/* =========================================================
+   ELEMENT REFERENCES
+   ========================================================= */
 
-document.getElementById('csvUrlDisplay').textContent = '(Select a location)';
+document.getElementById('csvUrlDisplay').textContent =
+  '(Select a location)';
 
-const dateSelector = document.getElementById('dateSelector');
-const tbody = document.querySelector('#tideTable tbody');
-const toggleBtn = document.getElementById('toggleTableBtn');
-const tableContainer = document.getElementById('tableContainer');
-const tooltip = document.getElementById('lineTooltip');
+const dateSelector =
+  document.getElementById('dateSelector');
 
-  const locationSelector = document.getElementById('locationSelector');
+const tbody =
+  document.querySelector('#tideTable tbody');
+
+const toggleBtn =
+  document.getElementById('toggleTableBtn');
+
+const tableContainer =
+  document.getElementById('tableContainer');
+
+const tooltip =
+  document.getElementById('lineTooltip');
+
+const locationSelector =
+  document.getElementById('locationSelector');
+
+
+/* =========================================================
+   LOCATION DROPDOWN
+   ========================================================= */
 
 Object.keys(LOCATIONS)
-  .sort((a, b) => a.localeCompare(b)) // sorts A → Z
-  .forEach(loc => { 
-    const option = document.createElement('option'); 
-    option.value = loc; 
-    option.textContent = loc; 
-    locationSelector.appendChild(option); 
-});
+  .sort((a,b) => a.localeCompare(b))
+  .forEach(loc => {
 
-let rawRows = [];                 // parsed CSV rows as arrays
-let dayMap = new Map();           // Map of dateKey (YYYY-MM-DD) => array of {tStr, h}
-let availableDates = [];          // list of date keys
-let dataPoints = [];              // sampled points for current day (every 15m)
-let highLowPoints = [];           // detected high/low points for current day
+    const option =
+      document.createElement('option');
 
-// Helper: detect delimiter and parse CSV text
-  // Returns YYYY-MM-DD in LOCAL timezone (NZ)
-function getLocalISODate() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
+    option.value = loc;
+    option.textContent = loc;
 
-function parseCSV(text){
-  // trim and split lines
-  const lines = text.trim().split(/\r?\n/).filter(l=>l.trim().length>0);
-  if(lines.length === 0) return [];
-  // detect delimiter by header
+    locationSelector.appendChild(option);
+
+  });
+
+
+/* =========================================================
+   DATA VARIABLES
+   ========================================================= */
+
+let rawRows = [];
+
+let dayMap = new Map();
+
+let availableDates = [];
+
+let dataPoints = [];
+
+let highLowPoints = [];
+
+
+/* =========================================================
+   CSV PARSER
+   ========================================================= */
+
+function parseCSV(text) {
+
+  const lines =
+    text
+      .trim()
+      .split(/\r?\n/)
+      .filter(l => l.trim().length > 0);
+
+  if (lines.length === 0)
+    return [];
+
   const header = lines[0];
+
   let delim = ',';
-  if(header.indexOf('\t') !== -1) delim = '\t';
-  else if(header.indexOf(';') !== -1) delim = ';';
-  else delim = ',';
-  return lines.map(line => line.split(delim).map(cell => cell.trim()));
+
+  if (header.indexOf('\t') !== -1)
+    delim = '\t';
+
+  else if (header.indexOf(';') !== -1)
+    delim = ';';
+
+  else
+    delim = ',';
+
+  return lines.map(line =>
+    line
+      .split(delim)
+      .map(cell => cell.trim())
+  );
+
 }
 
-// Convert date in CSV like "1/01/2025" into ISO date "2025-01-01"
-function csvDateToISO(dStr){
+
+/* =========================================================
+   LOCAL NZ DATE
+   ========================================================= */
+
+function getLocalISODate() {
+
+  const d = new Date();
+
+  const yyyy =
+    d.getFullYear();
+
+  const mm =
+    String(d.getMonth() + 1)
+      .padStart(2,'0');
+
+  const dd =
+    String(d.getDate())
+      .padStart(2,'0');
+
+  return `${yyyy}-${mm}-${dd}`;
+
+}
+
+
+/* =========================================================
+   CSV DATE CONVERSION
+   ========================================================= */
+
+function csvDateToISO(dStr) {
+
   const parts = dStr.split('/');
-  if (parts.length < 3) return null;
 
-  const day = parts[0].padStart(2, '0');
-  const month = parts[1].padStart(2, '0');
-  const year = parts[2];
+  if (parts.length < 3)
+    return null;
 
-  // Force NZ local time by using midday instead of midnight (prevents UTC shifting)
-  const tempDate = new Date(`${year}-${month}-${day}T12:00:00`);
+  const day =
+    parts[0].padStart(2,'0');
 
-  const yyyy = tempDate.getFullYear();
-  const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
-  const dd = String(tempDate.getDate()).padStart(2, '0');
+  const month =
+    parts[1].padStart(2,'0');
+
+  const year =
+    parts[2];
+
+  const tempDate =
+    new Date(
+      `${year}-${month}-${day}T12:00:00`
+    );
+
+  const yyyy =
+    tempDate.getFullYear();
+
+  const mm =
+    String(tempDate.getMonth() + 1)
+      .padStart(2,'0');
+
+  const dd =
+    String(tempDate.getDate())
+      .padStart(2,'0');
 
   return `${yyyy}-${mm}-${dd}`;
+
 }
 
-// Convert time strings like "0:17" or "06:36" to "HH:MM"
-function normalizeTime(tStr){
-  if(!tStr) return null;
-  const parts = tStr.split(':');
-  if(parts.length === 1) parts.push('00');
-  const hh = parts[0].padStart(2,'0');
-  const mm = parts[1].padStart(2,'0');
+
+/* =========================================================
+   TIME NORMALISATION
+   ========================================================= */
+
+function normalizeTime(tStr) {
+
+  if (!tStr)
+    return null;
+
+  const parts =
+    tStr.split(':');
+
+  if (parts.length === 1)
+    parts.push('00');
+
+  const hh =
+    parts[0].padStart(2,'0');
+
+  const mm =
+    parts[1].padStart(2,'0');
+
   return `${hh}:${mm}`;
+
 }
 
-// Build dayMap from parsed CSV rows
-function buildDayMap(rows){
+
+/* =========================================================
+   BUILD DAY MAP
+   ========================================================= */
+
+function buildDayMap(rows) {
+
   dayMap.clear();
+
   availableDates = [];
-  // first row might be header - try to detect header by non-date in first column
+
   let startIndex = 0;
-  if(rows.length===0) return;
-  if(!rows[0][0].match(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/)) startIndex = 1;
-  for(let i=startIndex;i<rows.length;i++){
-    const r = rows[i];
-    if(r.length < 2) continue;
-    const dateRaw = r[0];
-    const iso = csvDateToISO(dateRaw);
-    if(!iso) continue;
-    const entries = [];
-    // Expect Time1,Tide1 ... up to 4 pairs
-    for(let k=1;k+1<r.length;k+=2){
-      const t = r[k];
-      const h = r[k+1];
-      if(t && h){
-        const nt = normalizeTime(t);
-        const nh = parseFloat(h);
-        if(!isNaN(nh)) entries.push({time:nt, height:nh});
-      }
-    }
-    // sort by time
-    entries.sort((a,b)=> {
-      const A = a.time;
-      const B = b.time;
-      return A.localeCompare(B);
-    });
-    dayMap.set(iso, entries);
-    availableDates.push(iso);
+
+  if (rows.length === 0)
+    return;
+
+  if (
+    !rows[0][0].match(
+      /^\d{1,2}\/\d{1,2}\/\d{2,4}$/
+    )
+  ) {
+    startIndex = 1;
   }
-  // sort availableDates
+
+  for (
+    let i = startIndex;
+    i < rows.length;
+    i++
+  ) {
+
+    const r = rows[i];
+
+    if (r.length < 2)
+      continue;
+
+    const dateRaw = r[0];
+
+    const iso =
+      csvDateToISO(dateRaw);
+
+    if (!iso)
+      continue;
+
+    const entries = [];
+
+    for (
+      let k = 1;
+      k + 1 < r.length;
+      k += 2
+    ) {
+
+      const t = r[k];
+      const h = r[k + 1];
+
+      if (t && h) {
+
+        const nt =
+          normalizeTime(t);
+
+        const nh =
+          parseFloat(h);
+
+        if (!isNaN(nh)) {
+
+          entries.push({
+            time: nt,
+            height: nh
+          });
+
+        }
+
+      }
+
+    }
+
+    entries.sort((a,b) =>
+      a.time.localeCompare(b.time)
+    );
+
+    dayMap.set(
+      iso,
+      entries
+    );
+
+    availableDates.push(iso);
+
+  }
+
   availableDates.sort();
+
 }
 
-// Helper to get previous date ISO and next date ISO
-function addDaysISO(iso,delta){
-  const d = new Date(iso + 'T00:00:00');
-  d.setDate(d.getDate()+delta);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,'0');
-  const dd = String(d.getDate()).padStart(2,'0');
+
+/* =========================================================
+   ADD DAYS
+   ========================================================= */
+
+function addDaysISO(iso, delta) {
+
+  const d =
+    new Date(
+      iso + 'T00:00:00'
+    );
+
+  d.setDate(
+    d.getDate() + delta
+  );
+
+  const yyyy =
+    d.getFullYear();
+
+  const mm =
+    String(d.getMonth() + 1)
+      .padStart(2,'0');
+
+  const dd =
+    String(d.getDate())
+      .padStart(2,'0');
+
   return `${yyyy}-${mm}-${dd}`;
+
 }
 
-// For a target date, build "known" tide events as absolute timestamps (ms) across previous day through next day
-function buildKnownEventsForDate(dateISO){
-  // We'll include:
-  // - last tide(s) from previous day with timestamp on previous date
-  // - all tides from current date (timestamps on that date)
-  // - first tide(s) from next day (timestamp on next date)
-  const prev = addDaysISO(dateISO, -1);
-  const next = addDaysISO(dateISO, +1);
+
+/* =========================================================
+   BUILD KNOWN TIDE EVENTS
+   ========================================================= */
+
+function buildKnownEventsForDate(dateISO) {
+
+  const prev =
+    addDaysISO(dateISO,-1);
+
+  const next =
+    addDaysISO(dateISO,1);
+
   const ev = [];
 
-  function pushDay(iso, tag){
-    const arr = dayMap.get(iso) || [];
-    arr.forEach(item=>{
-      const dtStr = `${iso}T${item.time}`;
-      ev.push({t:new Date(dtStr), h:item.height, dayIso:iso});
+  function pushDay(iso) {
+
+    const arr =
+      dayMap.get(iso) || [];
+
+    arr.forEach(item => {
+
+      const dtStr =
+        `${iso}T${item.time}`;
+
+      ev.push({
+        t:new Date(dtStr),
+        h:item.height,
+        dayIso:iso
+      });
+
     });
+
   }
-  pushDay(prev);   // previous day's tides
-  pushDay(dateISO); // current
-  pushDay(next);   // next
-  // sort by time
-  ev.sort((a,b)=> +a.t - +b.t);
+
+  pushDay(prev);
+  pushDay(dateISO);
+  pushDay(next);
+
+  ev.sort((a,b) =>
+    +a.t - +b.t
+  );
+
   return ev;
+
 }
 
-// build sampled points every 'stepMins' minutes from midnight of dateISO to end of that day
-function sampleDay(dateISO, stepMins=5){ // smaller step for smoother curve
-  const events = buildKnownEventsForDate(dateISO);
-  if(events.length < 2) return [];
 
-  const start = new Date(dateISO + 'T00:00:00');
-  const end = new Date(dateISO + 'T23:59:59');
+/* =========================================================
+   SAMPLE DAY
+   ========================================================= */
+
+function sampleDay(dateISO, stepMins=5) {
+
+  const events =
+    buildKnownEventsForDate(dateISO);
+
+  if (events.length < 2)
+    return [];
+
+  const start =
+    new Date(
+      dateISO + 'T00:00:00'
+    );
+
+  const end =
+    new Date(
+      dateISO + 'T23:59:59'
+    );
+
   const sampled = [];
 
-  for(let ms = +start; ms <= +end; ms += stepMins*60*1000){
-    // find nearest tide points before and after
-    let prev = events[0], next = events[events.length-1];
-    for(let i=0;i<events.length-1;i++){
-      if(+events[i].t <= ms && ms <= +events[i+1].t){
-        prev = events[i]; 
-        next = events[i+1]; 
+  for (
+    let ms = +start;
+    ms <= +end;
+    ms += stepMins * 60 * 1000
+  ) {
+
+    let prev = events[0];
+
+    let next = events[events.length - 1];
+
+    for (
+      let i = 0;
+      i < events.length - 1;
+      i++
+    ) {
+
+      if (
+        +events[i].t <= ms &&
+        ms <= +events[i+1].t
+      ) {
+
+        prev = events[i];
+
+        next = events[i+1];
+
         break;
+
       }
+
     }
-    const t0 = +prev.t, t1 = +next.t;
-    const y0 = prev.h, y1 = next.h;
 
-    // Smooth sinusoidal approximation
-    const ratio = (ms - t0)/(t1 - t0 || 1);
-    const y = y0 + (y1 - y0)*(0.5 - 0.5*Math.cos(Math.PI*ratio)); // smooth curve
-    sampled.push({x:new Date(ms), y:parseFloat(y.toFixed(3))});
+    const t0 = +prev.t;
+
+    const t1 = +next.t;
+
+    const y0 = prev.h;
+
+    const y1 = next.h;
+
+    const ratio =
+      (ms - t0) /
+      (t1 - t0 || 1);
+
+    const y =
+      y0 +
+      (y1 - y0) *
+      (
+        0.5 -
+        0.5 *
+        Math.cos(Math.PI * ratio)
+      );
+
+    sampled.push({
+      x:new Date(ms),
+      y:parseFloat(y.toFixed(3))
+    });
+
   }
+
   return sampled;
+
 }
 
 
-// detect local highs and lows in sampled data (simple neighbor compare)
-function detectHighLow(sampled){
-  const peaks = [];
-  for(let i=1;i<sampled.length-1;i++){
-    const prev = sampled[i-1].y, cur = sampled[i].y, next = sampled[i+1].y;
-    if(cur > prev && cur > next) peaks.push({...sampled[i],type:'High'});
-    if(cur < prev && cur < next) peaks.push({...sampled[i],type:'Low'});
-  }
-  // filter to keep only those peaks that belong to the requested date (we'll filter later)
-  return peaks;
-}
-
-/* ================= Chart & UI setup ================= */
+/* =========================================================
+   CHART VARIABLES
+   ========================================================= */
 
 let markerTime = new Date();
+
 let isDragging = false;
 
-// Chart plugin for vertical line and tooltip
+
+/* =========================================================
+   VERTICAL LINE PLUGIN
+   ========================================================= */
+
 const verticalLinePlugin = {
-  id: 'verticalLinePlugin',
-  afterDraw(chart){
-    const xScale = chart.scales.x, yScale = chart.scales.y;
-    if(!xScale || !yScale) return;
-    const ctx = chart.ctx;
-    const x = xScale.getPixelForValue(markerTime);
-    // if NaN skip
-    if(!isFinite(x)) return;
+
+  id:'verticalLinePlugin',
+
+  afterDraw(chart) {
+
+    const xScale =
+      chart.scales.x;
+
+    const yScale =
+      chart.scales.y;
+
+    if (!xScale || !yScale)
+      return;
+
+    const ctx =
+      chart.ctx;
+
+    const x =
+      xScale.getPixelForValue(
+        markerTime
+      );
+
+    if (!isFinite(x))
+      return;
 
     ctx.save();
+
     ctx.beginPath();
-    ctx.moveTo(x, yScale.top);
-    ctx.lineTo(x, yScale.bottom);
+
+    ctx.moveTo(
+      x,
+      yScale.top
+    );
+
+    ctx.lineTo(
+      x,
+      yScale.bottom
+    );
+
     ctx.strokeStyle = 'red';
+
     ctx.lineWidth = 2;
+
     ctx.stroke();
 
-    // draw small circle at interpolated height
-    const s = sampleAt(markerTime);
-    const y = yScale.getPixelForValue(s.y);
+    const s =
+      sampleAt(markerTime);
+
+    const y =
+      yScale.getPixelForValue(
+        s.y
+      );
+
     ctx.fillStyle = 'red';
-    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      5,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
     ctx.restore();
 
-    // Tooltip content and position (placed just above the marker)
+
     let trend = 'Stable';
-    if(s.slope > 0.01) trend = 'Rising';
-    else if(s.slope < -0.01) trend = 'Falling';
-    tooltip.style.display = 'block';
-    tooltip.innerHTML = `<strong>${s.x.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</strong><br>${s.y.toFixed(2)} m — ${trend}`;
-    // position relative to chart container
-     tooltip.style.left = x + 'px';
-tooltip.style.top = y - 18 + 'px';
-tooltip.style.display = 'block';
 
- //   (NEW TEXT LABEL)      //
+    if (s.slope > 0.01)
+      trend = 'Rising';
 
-ctx.save();
-ctx.fillStyle = 'rgba(0,0,0,0.6)';
-ctx.font = '12px Arial';
-ctx.textAlign = 'center';
+    else if (s.slope < -0.01)
+      trend = 'Falling';
 
-// place text near top of chart, aligned with red line
-ctx.fillText('Hold & drag the Red line', x, yScale.top + 15);
+    tooltip.style.display =
+      'block';
 
-ctx.restore();
+    tooltip.innerHTML =
+      `<strong>${s.x.toLocaleTimeString(
+        [],
+        {
+          hour:'2-digit',
+          minute:'2-digit'
+        }
+      )}</strong><br>
+      ${s.y.toFixed(2)} m — ${trend}`;
+
+    tooltip.style.left =
+      x + 'px';
+
+    tooltip.style.top =
+      y - 18 + 'px';
+
+
+    ctx.save();
+
+    ctx.fillStyle =
+      'rgba(0,0,0,0.6)';
+
+    ctx.font =
+      '12px Arial';
+
+    ctx.textAlign =
+      'center';
+
+    ctx.fillText(
+      'Hold & drag the Red line',
+      x,
+      yScale.top + 15
+    );
+
+    ctx.restore();
 
   }
+
 };
 
-// returns interpolated value & slope (m per hour) at given Date/time
-function sampleAt(time){
-  const timeMs = +new Date(time);
-  if(!dataPoints || dataPoints.length===0) return {x:new Date(timeMs), y:0, slope:0};
-  // binary search to find surrounding sample points
-  let lo=0, hi=dataPoints.length-1;
-  while(lo < hi){
-    const mid = Math.floor((lo+hi)/2);
-    if(+dataPoints[mid].x <= timeMs) lo = mid+1;
-    else hi = mid;
+
+/* =========================================================
+   SAMPLE CURRENT TIME
+   ========================================================= */
+
+function sampleAt(time) {
+
+  const timeMs =
+    +new Date(time);
+
+  if (
+    !dataPoints ||
+    dataPoints.length === 0
+  ) {
+
+    return {
+      x:new Date(timeMs),
+      y:0,
+      slope:0
+    };
+
   }
-  let idx = Math.max(1, lo);
-  if(idx >= dataPoints.length) idx = dataPoints.length-1;
-  const a = dataPoints[idx-1], b = dataPoints[idx];
-  const t0 = +a.x, t1 = +b.x;
-  const ratio = (timeMs - t0) / (t1 - t0 || 1);
-  const y = a.y + (b.y - a.y) * ratio;
-  // slope per hour
-  const slope = (b.y - a.y) / ((t1 - t0) / 3600000 || 1);
-  return {x: new Date(timeMs), y, slope};
+
+  let lo = 0;
+
+  let hi =
+    dataPoints.length - 1;
+
+  while (lo < hi) {
+
+    const mid =
+      Math.floor(
+        (lo + hi) / 2
+      );
+
+    if (
+      +dataPoints[mid].x <= timeMs
+    )
+      lo = mid + 1;
+
+    else
+      hi = mid;
+
+  }
+
+  let idx =
+    Math.max(1, lo);
+
+  if (
+    idx >= dataPoints.length
+  )
+    idx =
+      dataPoints.length - 1;
+
+  const a =
+    dataPoints[idx - 1];
+
+  const b =
+    dataPoints[idx];
+
+  const t0 = +a.x;
+
+  const t1 = +b.x;
+
+  const ratio =
+    (timeMs - t0) /
+    (t1 - t0 || 1);
+
+  const y =
+    a.y +
+    (b.y - a.y) *
+    ratio;
+
+  const slope =
+    (b.y - a.y) /
+    (
+      (t1 - t0) /
+      3600000 || 1
+    );
+
+  return {
+    x:new Date(timeMs),
+    y,
+    slope
+  };
+
 }
 
-// Chart initialisation
-const ctx = document.getElementById('tideChart').getContext('2d');  
-// water gradient (under tide line)
-const waterGradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-waterGradient.addColorStop(0, 'rgba(0,123,255,0.3)');
-waterGradient.addColorStop(1, 'rgba(0,123,255,0.5)');
+
+/* =========================================================
+   CHART INITIALISATION
+   ========================================================= */
+
+const ctx =
+  document
+    .getElementById('tideChart')
+    .getContext('2d');
 
 
-   
-// plugin to draw sky + clouds above tide
-const skyPlugin = { 
-  id: 'skyPlugin',
-  beforeDatasetsDraw(chart, args, options) {
-    const {ctx, chartArea: {top, bottom, left, right}} = chart;
+const waterGradient =
+  ctx.createLinearGradient(
+    0,
+    0,
+    0,
+    ctx.canvas.height
+  );
 
-    // draw sky
+waterGradient.addColorStop(
+  0,
+  'rgba(0,123,255,0.3)'
+);
+
+waterGradient.addColorStop(
+  1,
+  'rgba(0,123,255,0.5)'
+);
+
+
+/* =========================================================
+   SKY PLUGIN
+   ========================================================= */
+
+const skyPlugin = {
+
+  id:'skyPlugin',
+
+  beforeDatasetsDraw(
+    chart,
+    args,
+    options
+  ) {
+
+    const {
+      ctx,
+      chartArea:{
+        top,
+        bottom,
+        left,
+        right
+      }
+    } = chart;
+
     ctx.save();
-    ctx.fillStyle = '#87CEEB'; //sky blue
-    ctx.fillRect(left, top, right-left, bottom-top);
-      ctx.restore();
+
+    ctx.fillStyle =
+      '#87CEEB';
+
+    ctx.fillRect(
+      left,
+      top,
+      right-left,
+      bottom-top
+    );
+
+    ctx.restore();
+
   }
+
 };
 
-   
 
-  
- // create chart
-  const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      datasets: [
-        {
-       label: 'Tide height (m)',
-       data: [], // fill later with sampled points
-       borderColor: '#007bff',
-       backgroundColor: waterGradient,
-       tension: 0.5,
-       pointRadius: 0.5,
-       fill: true
+/* =========================================================
+   CREATE CHART
+   ========================================================= */
+
+const chart =
+  new Chart(
+    ctx,
+    {
+
+      type:'line',
+
+      data: {
+
+        datasets: [
+
+          {
+
+            label:'Tide height (m)',
+
+            data:[],
+
+            borderColor:'#007bff',
+
+            backgroundColor:
+              waterGradient,
+
+            tension:0.5,
+
+            pointRadius:0.5,
+
+            fill:true
+
+          },
+
+          {
+
+            label:'High/Low',
+
+            data:[],
+
+            pointRadius:6,
+
+            showLine:false,
+
+            backgroundColor:[],
+
+            borderColor:[]
+
+          }
+
+        ]
+
       },
-      {
-      label: 'High/Low',
-        data: [],
-        pointRadius: 6,
-        showLine: false,
-        backgroundColor: [],
-        borderColor: []
-        }
-      ]
+
+      options: {
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+        animation:false,
+
+        scales: {
+
+          x: {
+
+            type:'time',
+
+            time: {
+
+              unit:'hour',
+
+              displayFormats: {
+                hour:'HH:mm'
+              }
+
+            },
+
+            title: {
+              display:true,
+              text:'Time'
+            }
+
+          },
+
+          y: {
+
+            title: {
+              display:true,
+              text:'Height (m)'
+            },
+
+            min:0
+
+          }
+
         },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      scales: {
-      x: { type:'time', time:{ unit:'hour', displayFormats:{ hour:'HH:mm'}}, title:{display:true,text:'Time'} },
-      y: { title:{display:true,text:'Height (m)'}, min:0,}
+
+        plugins: {
+
+          legend: {
+            display:false
+          },
+
+          tooltip: {
+            enabled:false
+          }
+
+        }
+
       },
-      plugins: { legend:{display:false}, tooltip:{enabled:false} }        
-    },
-    plugins: [skyPlugin, verticalLinePlugin]
-  });
-  
- 
-  
-  
 
+      plugins:[
+        skyPlugin,
+        verticalLinePlugin
+      ]
 
-/* ====== Interaction: drag vertical line ====== */
-const canvas = chart.canvas;
-function pixelToTime(px){ return chart.scales.x.getValueForPixel(px); }
-
-canvas.addEventListener('mousedown', e => {
-  isDragging = true;
-  markerTime = pixelToTime(e.offsetX);
-  chart.draw();
-});
-canvas.addEventListener('mousemove', e => {
-  if(isDragging){
-    markerTime = pixelToTime(e.offsetX);
-    chart.draw();
-  }
-});
-window.addEventListener('mouseup', e => {
-  if(isDragging){
-    isDragging = false;
-    
-/* ===== Touch support for mobile devices ===== */
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  const x = touch.clientX - rect.left;
-  isDragging = true;
-  markerTime = pixelToTime(x);
-  chart.draw();
-});
-
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (isDragging) {
-    const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    markerTime = pixelToTime(x);
-    chart.draw();
-  }
-});
-
-canvas.addEventListener('touchend', () => {
-  if (isDragging) {
-    isDragging = false;
-
-    // same animation as mouse release
-    const start = +markerTime;
-    const end = +new Date();
-    const t0 = performance.now();
-    function step(now){
-      const elapsed = now - t0;
-      const frac = Math.min(1, elapsed / 700);
-      const ease = 1 - Math.pow(1-frac, 2);
-      markerTime = new Date(start + (end - start) * ease);
-      chart.draw();
-      if(frac < 1) requestAnimationFrame(step);
     }
-    requestAnimationFrame(step);
-  }
-});
+  );
 
-    
-    // animate markerTime back to current time
-    const start = +markerTime;
-    const end = +new Date();
-    const t0 = performance.now();
-    function step(now){
-      const elapsed = now - t0;
-      const frac = Math.min(1, elapsed / 700);
-      const ease = 1 - Math.pow(1-frac, 2);
-      markerTime = new Date(start + (end - start) * ease);
+
+/* =========================================================
+   CHART INTERACTION
+   ========================================================= */
+
+const canvas =
+  chart.canvas;
+
+
+function pixelToTime(px) {
+
+  return chart.scales.x
+    .getValueForPixel(px);
+
+}
+
+
+canvas.addEventListener(
+  'mousedown',
+  e => {
+
+    isDragging = true;
+
+    markerTime =
+      pixelToTime(e.offsetX);
+
+    chart.draw();
+
+  }
+);
+
+
+canvas.addEventListener(
+  'mousemove',
+  e => {
+
+    if (isDragging) {
+
+      markerTime =
+        pixelToTime(e.offsetX);
+
       chart.draw();
-      if(frac < 1) requestAnimationFrame(step);
+
     }
-    requestAnimationFrame(step);
+
   }
-});
+);
 
-// keep marker synced to current time when not dragging
-setInterval(()=>{ if(!isDragging) { markerTime = new Date(); chart.draw(); } }, 30000);
 
-/* ============ Table toggle ============ */
-toggleBtn.addEventListener('click', ()=>{
-  if(tableContainer.style.display === 'none'){
-    tableContainer.style.display = 'block';
-    toggleBtn.textContent = 'Hide Tide Table ▲';
-  } else {
-    tableContainer.style.display = 'none';
-    toggleBtn.textContent = 'Show Tide Table ▼';
+window.addEventListener(
+  'mouseup',
+  e => {
+
+    if (isDragging) {
+
+      isDragging = false;
+
+      const start =
+        +markerTime;
+
+      const end =
+        +new Date();
+
+      const t0 =
+        performance.now();
+
+      function step(now) {
+
+        const elapsed =
+          now - t0;
+
+        const frac =
+          Math.min(
+            1,
+            elapsed / 700
+          );
+
+        const ease =
+          1 -
+          Math.pow(
+            1-frac,
+            2
+          );
+
+        markerTime =
+          new Date(
+            start +
+            (end - start) *
+            ease
+          );
+
+        chart.draw();
+
+        if (frac < 1)
+          requestAnimationFrame(step);
+
+      }
+
+      requestAnimationFrame(step);
+
+    }
+
   }
-});
+);
 
-/* ============ CSV load and wiring ============ */
 
-async function loadAndInit(csvUrl){
+/* =========================================================
+   TOUCH SUPPORT
+   ========================================================= */
+
+canvas.addEventListener(
+  'touchstart',
+  e => {
+
+    e.preventDefault();
+
+    const touch =
+      e.touches[0];
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    const x =
+      touch.clientX -
+      rect.left;
+
+    isDragging = true;
+
+    markerTime =
+      pixelToTime(x);
+
+    chart.draw();
+
+  }
+);
+
+
+canvas.addEventListener(
+  'touchmove',
+  e => {
+
+    e.preventDefault();
+
+    if (isDragging) {
+
+      const touch =
+        e.touches[0];
+
+      const rect =
+        canvas.getBoundingClientRect();
+
+      const x =
+        touch.clientX -
+        rect.left;
+
+      markerTime =
+        pixelToTime(x);
+
+      chart.draw();
+
+    }
+
+  }
+);
+
+
+canvas.addEventListener(
+  'touchend',
+  () => {
+
+    if (isDragging) {
+
+      isDragging = false;
+
+      const start =
+        +markerTime;
+
+      const end =
+        +new Date();
+
+      const t0 =
+        performance.now();
+
+      function step(now) {
+
+        const elapsed =
+          now - t0;
+
+        const frac =
+          Math.min(
+            1,
+            elapsed / 700
+          );
+
+        const ease =
+          1 -
+          Math.pow(
+            1-frac,
+            2
+          );
+
+        markerTime =
+          new Date(
+            start +
+            (end - start) *
+            ease
+          );
+
+        chart.draw();
+
+        if (frac < 1)
+          requestAnimationFrame(step);
+
+      }
+
+      requestAnimationFrame(step);
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   KEEP MARKER CURRENT
+   ========================================================= */
+
+setInterval(
+  () => {
+
+    if (!isDragging) {
+
+      markerTime =
+        new Date();
+
+      chart.draw();
+
+    }
+
+  },
+  30000
+);
+
+
+/* =========================================================
+   TABLE TOGGLE
+   ========================================================= */
+
+toggleBtn.addEventListener(
+  'click',
+  () => {
+
+    if (
+      tableContainer.style.display ===
+      'none'
+    ) {
+
+      tableContainer.style.display =
+        'block';
+
+      toggleBtn.textContent =
+        'Hide Tide Table ▲';
+
+    }
+
+    else {
+
+      tableContainer.style.display =
+        'none';
+
+      toggleBtn.textContent =
+        'Show Tide Table ▼';
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LOAD CSV
+   ========================================================= */
+
+async function loadAndInit(csvUrl) {
+
   try {
-    const res = await fetch(csvUrl);
-    if(!res.ok) throw new Error('Failed to fetch CSV: ' + res.status);
 
-    const txt = await res.text();
-    rawRows = parseCSV(txt);
+    const res =
+      await fetch(csvUrl);
+
+    if (!res.ok)
+      throw new Error(
+        'Failed to fetch CSV: ' +
+        res.status
+      );
+
+    const txt =
+      await res.text();
+
+    rawRows =
+      parseCSV(txt);
+
     buildDayMap(rawRows);
 
-    const todayISO = getLocalISODate();
-    if(dayMap.has(todayISO)) dateSelector.value = todayISO;
-    else if(availableDates.length>0) dateSelector.value = availableDates[0];
+    const todayISO =
+      getLocalISODate();
 
-    renderForDate(dateSelector.value);
+    if (
+      dayMap.has(todayISO)
+    )
 
-  } catch(err){
+      dateSelector.value =
+        todayISO;
+
+    else if (
+      availableDates.length > 0
+    )
+
+      dateSelector.value =
+        availableDates[0];
+
+    renderForDate(
+      dateSelector.value
+    );
+
+  }
+
+  catch(err) {
+
     console.error(err);
-    alert('Failed to load CSV.');
+
+    alert(
+      'Failed to load CSV.'
+    );
+
   }
+
 }
 
-function renderForDate(dateISO){
-  // sample the day
-  // sample the day
-dataPoints = sampleDay(dateISO, 5);
 
-  // 🔹 Calculate dynamic max with 0.2m buffer
-const maxHeight = Math.max(...dataPoints.map(p => p.y));
-const adjustedMax = Math.ceil((maxHeight + 0.2) * 10) / 10; // round to 1 decimal
+/* =========================================================
+   RENDER DATE
+   ========================================================= */
 
-chart.options.scales.y.max = adjustedMax;
+function renderForDate(dateISO) {
 
-// include CSV tide points for peak detection
-// ✅ USE CSV DATA DIRECTLY (this is the fix)
-const rawTides = dayMap.get(dateISO) || [];
+  dataPoints =
+    sampleDay(
+      dateISO,
+      5
+    );
 
-highLowPoints = rawTides
-  .map(p => ({
-    x: new Date(`${dateISO}T${p.time}`),
-    y: p.height
-  }))
-  .sort((a, b) => +a.x - +b.x);
 
-// ✅ Assign High / Low properly (alternating logic)
-// 🔥 FIX: determine first tide using previous day's last tide
-const prevDate = addDaysISO(dateISO, -1);
-const prevTides = dayMap.get(prevDate) || [];
+  const maxHeight =
+    Math.max(
+      ...dataPoints.map(
+        p => p.y
+      )
+    );
 
-let prevHeight = null;
+  const adjustedMax =
+    Math.ceil(
+      (maxHeight + 0.2) * 10
+    ) / 10;
 
-// get last tide from previous day if exists
-if (prevTides.length > 0) {
-  prevHeight = prevTides[prevTides.length - 1].height;
-}
+  chart.options.scales.y.max =
+    adjustedMax;
 
-for (let i = 0; i < highLowPoints.length; i++) {
-  if (i === 0 && prevHeight !== null) {
-    // compare with previous day's last tide
-    highLowPoints[i].type =
-      highLowPoints[i].y > prevHeight ? 'High' : 'Low';
-  } else if (i === 0) {
-    // fallback if no previous day data
-    highLowPoints[i].type = 'High';
-  } else {
-    highLowPoints[i].type =
-      highLowPoints[i].y > highLowPoints[i - 1].y ? 'High' : 'Low';
+
+  const rawTides =
+    dayMap.get(dateISO) || [];
+
+
+  highLowPoints =
+    rawTides
+      .map(p => ({
+
+        x:new Date(
+          `${dateISO}T${p.time}`
+        ),
+
+        y:p.height
+
+      }))
+
+      .sort(
+        (a,b) =>
+          +a.x - +b.x
+      );
+
+
+  const prevDate =
+    addDaysISO(
+      dateISO,
+      -1
+    );
+
+  const prevTides =
+    dayMap.get(prevDate) || [];
+
+
+  let prevHeight = null;
+
+
+  if (
+    prevTides.length > 0
+  ) {
+
+    prevHeight =
+      prevTides[
+        prevTides.length - 1
+      ].height;
+
   }
-}
 
-// update chart main dataset
-chart.data.datasets[0].data = dataPoints.map(p => ({x: p.x, y: p.y}));
 
-// update peaks dataset for visual markers
-chart.data.datasets[1].data = highLowPoints.map(p => {
-  // snap y to nearest sampled y
-  const nearest = dataPoints.reduce((a,b)=> Math.abs(+b.x - +p.x) < Math.abs(+a.x - +p.x)? b:a);
-  return {x:p.x, y:nearest.y};
-});
+  for (
+    let i = 0;
+    i < highLowPoints.length;
+    i++
+  ) {
 
-// set colours for peaks
-chart.data.datasets[1].backgroundColor = highLowPoints.map(p => p.type === 'High' ? 'green' : 'orange');
-chart.data.datasets[1].borderColor = highLowPoints.map(p => p.type === 'High' ? 'green' : 'orange');
+    if (
+      i === 0 &&
+      prevHeight !== null
+    ) {
 
-// rebuild table showing High & Low
-tbody.innerHTML = '';
-if(highLowPoints.length === 0){
-  tbody.innerHTML = `<tr><td colspan="3">No high/low points detected for this date</td></tr>`;
-} else {
-  highLowPoints.sort((a,b)=> +a.x - +b.x);
-  highLowPoints.forEach(p=>{
-    const tr = document.createElement('tr');
-   if (p.type === 'High') {
-      tr.classList.add('row-high');
-    } else {
-      tr.classList.add('row-low');
+      highLowPoints[i].type =
+        highLowPoints[i].y >
+        prevHeight
+          ? 'High'
+          : 'Low';
+
     }
 
-    const tdTime = document.createElement('td');
-    tdTime.textContent = p.x.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    else if (i === 0) {
 
-    const tdH = document.createElement('td');
-    tdH.textContent = p.y.toFixed(2);
+      highLowPoints[i].type =
+        'High';
 
-    const tdType = document.createElement('td');
-
-    if (p.type === 'High') {
-      tdType.innerHTML = '▲ High';
-      tdType.className = 'high';
-    } else {
-      tdType.innerHTML = '▼ Low';
-      tdType.className = 'low';
     }
 
-    tr.appendChild(tdTime);
-    tr.appendChild(tdH);
-    tr.appendChild(tdType);
+    else {
 
-    tbody.appendChild(tr);
-  });
-}
+      highLowPoints[i].type =
+        highLowPoints[i].y >
+        highLowPoints[i - 1].y
+          ? 'High'
+          : 'Low';
 
-// set markerTime to current time (so it shows now initially)
-markerTime = new Date();
-chart.update();
+    }
 
-}
-
-// date picker change
-dateSelector.addEventListener('change', ()=>{
-  if(!dateSelector.value) return;
-  if(!dayMap.has(dateSelector.value)) {
-    // If chosen day not found in CSV, show message and attempt to still sample (will use neighbours if present)
-    console.warn('Selected date not in CSV, sampling algorithm will attempt interpolation using neighbouring days if available.');
   }
-  renderForDate(dateSelector.value);
-});
-  const todayBtn = document.getElementById('todayBtn');
-  const prevDayBtn = document.getElementById('prevDayBtn');
-const nextDayBtn = document.getElementById('nextDayBtn');
 
-// helper to shift date
+
+  /* Update main chart */
+
+  chart.data.datasets[0].data =
+    dataPoints.map(
+      p => ({
+        x:p.x,
+        y:p.y
+      })
+    );
+
+
+  /* Update high/low markers */
+
+  chart.data.datasets[1].data =
+    highLowPoints.map(
+      p => {
+
+        const nearest =
+          dataPoints.reduce(
+            (a,b) =>
+              Math.abs(
+                +b.x - +p.x
+              ) <
+              Math.abs(
+                +a.x - +p.x
+              )
+                ? b
+                : a
+          );
+
+        return {
+          x:p.x,
+          y:nearest.y
+        };
+
+      }
+    );
+
+
+  chart.data.datasets[1].backgroundColor =
+    highLowPoints.map(
+      p =>
+        p.type === 'High'
+          ? 'green'
+          : 'orange'
+    );
+
+
+  chart.data.datasets[1].borderColor =
+    highLowPoints.map(
+      p =>
+        p.type === 'High'
+          ? 'green'
+          : 'orange'
+    );
+
+
+  /* Rebuild tide table */
+
+  tbody.innerHTML = '';
+
+
+  if (
+    highLowPoints.length === 0
+  ) {
+
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="3">
+          No high/low points detected for this date
+        </td>
+      </tr>`;
+
+  }
+
+  else {
+
+    highLowPoints.sort(
+      (a,b) =>
+        +a.x - +b.x
+    );
+
+
+    highLowPoints.forEach(
+      p => {
+
+        const tr =
+          document.createElement(
+            'tr'
+          );
+
+
+        if (
+          p.type === 'High'
+        )
+
+          tr.classList.add(
+            'row-high'
+          );
+
+        else
+
+          tr.classList.add(
+            'row-low'
+          );
+
+
+        const tdTime =
+          document.createElement(
+            'td'
+          );
+
+        tdTime.textContent =
+          p.x.toLocaleTimeString(
+            [],
+            {
+              hour:'2-digit',
+              minute:'2-digit'
+            }
+          );
+
+
+        const tdH =
+          document.createElement(
+            'td'
+          );
+
+        tdH.textContent =
+          p.y.toFixed(2);
+
+
+        const tdType =
+          document.createElement(
+            'td'
+          );
+
+
+        if (
+          p.type === 'High'
+        ) {
+
+          tdType.innerHTML =
+            '▲ High';
+
+          tdType.className =
+            'high';
+
+        }
+
+        else {
+
+          tdType.innerHTML =
+            '▼ Low';
+
+          tdType.className =
+            'low';
+
+        }
+
+
+        tr.appendChild(
+          tdTime
+        );
+
+        tr.appendChild(
+          tdH
+        );
+
+        tr.appendChild(
+          tdType
+        );
+
+
+        tbody.appendChild(
+          tr
+        );
+
+      }
+    );
+
+  }
+
+
+  markerTime =
+    new Date();
+
+  chart.update();
+
+}
+
+
+/* =========================================================
+   DATE PICKER
+   ========================================================= */
+
+dateSelector.addEventListener(
+  'change',
+  () => {
+
+    if (!dateSelector.value)
+      return;
+
+    if (
+      !dayMap.has(
+        dateSelector.value
+      )
+    ) {
+
+      console.warn(
+        'Selected day not in CSV, sampling algorithm will attempt interpolation using neighbouring days if available.'
+      );
+
+    }
+
+    renderForDate(
+      dateSelector.value
+    );
+
+  }
+);
+
+
+/* =========================================================
+   BUTTON REFERENCES
+   ========================================================= */
+
+const todayBtn =
+  document.getElementById(
+    'todayBtn'
+  );
+
+const prevDayBtn =
+  document.getElementById(
+    'prevDayBtn'
+  );
+
+const nextDayBtn =
+  document.getElementById(
+    'nextDayBtn'
+  );
+
+
+/* =========================================================
+   CHANGE DAY
+   ========================================================= */
+
 function changeDay(offset) {
-  if (!dateSelector.value) return;
 
-  const current = new Date(dateSelector.value + 'T00:00:00');
-  current.setDate(current.getDate() + offset);
+  if (!dateSelector.value)
+    return;
 
-  const yyyy = current.getFullYear();
-  const mm = String(current.getMonth() + 1).padStart(2, '0');
-  const dd = String(current.getDate()).padStart(2, '0');
+  const current =
+    new Date(
+      dateSelector.value +
+      'T00:00:00'
+    );
 
-  const newDate = `${yyyy}-${mm}-${dd}`;
-  dateSelector.value = newDate;
+  current.setDate(
+    current.getDate() +
+    offset
+  );
 
-  renderForDate(newDate);
+  const yyyy =
+    current.getFullYear();
+
+  const mm =
+    String(
+      current.getMonth() + 1
+    ).padStart(2,'0');
+
+  const dd =
+    String(
+      current.getDate()
+    ).padStart(2,'0');
+
+  const newDate =
+    `${yyyy}-${mm}-${dd}`;
+
+  dateSelector.value =
+    newDate;
+
+  renderForDate(
+    newDate
+  );
+
 }
 
-// button actions
-prevDayBtn.addEventListener('click', () => changeDay(-1));
-nextDayBtn.addEventListener('click', () => changeDay(1));
-todayBtn.addEventListener('click', () => {
-const todayISO = getLocalISODate();
-  dateSelector.value = todayISO; renderForDate(todayISO);
-});
 
-locationSelector.addEventListener('change', () => {
-  const selectedLocation = locationSelector.value;
-  const url = LOCATIONS[selectedLocation];
+/* =========================================================
+   BUTTON ACTIONS
+   ========================================================= */
 
-  document.getElementById('csvUrlDisplay').textContent = url;
+prevDayBtn.addEventListener(
+  'click',
+  () => changeDay(-1)
+);
 
-  loadAndInit(url);
-});
-  
 
-// initial load
-const defaultLocation = "Wellington";
-locationSelector.value = defaultLocation;
-loadAndInit(LOCATIONS[defaultLocation]);
+nextDayBtn.addEventListener(
+  'click',
+  () => changeDay(1)
+);
+
+
+todayBtn.addEventListener(
+  'click',
+  () => {
+
+    const todayISO =
+      getLocalISODate();
+
+    dateSelector.value =
+      todayISO;
+
+    renderForDate(
+      todayISO
+    );
+
+  }
+);
+
+
+/* =========================================================
+   LOCATION CHANGE
+   ========================================================= */
+
+locationSelector.addEventListener(
+  'change',
+  () => {
+
+    const selectedLocation =
+      locationSelector.value;
+
+    const url =
+      LOCATIONS[
+        selectedLocation
+      ];
+
+    document.getElementById(
+      'csvUrlDisplay'
+    ).textContent =
+      url;
+
+    loadAndInit(url);
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+const defaultLocation =
+  "Wellington";
+
+locationSelector.value =
+  defaultLocation;
+
+loadAndInit(
+  LOCATIONS[
+    defaultLocation
+  ]
+);
 
 </script>
+
 </body>
 </html>
+```
