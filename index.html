@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,20 +28,35 @@
    GENERAL PAGE
    ========================================================= */
 
+* {
+  box-sizing: border-box;
+}
+
 body {
+
   font-family: Arial, sans-serif;
+
   background: #f0f8ff;
+
   margin: 18px;
+
   color: #033;
 
-  background-image: url("https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/new%20background.jpg");
+  background-image:
+    url("https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/new%20background.jpg");
+
   background-size: cover;
+
   background-position: center;
+
   background-repeat: no-repeat;
+
   background-attachment: fixed;
 
   padding-top: 30px;
+
   padding-bottom: 60px;
+
 }
 
 
@@ -51,34 +65,47 @@ body {
    ========================================================= */
 
 header {
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
+
   position: relative;
 
   margin-top: 15px;
+
   margin-bottom: 15px;
 
   text-align: center;
+
 }
 
 
 header img {
+
   position: absolute;
+
   left: 10px;
+
   top: 50%;
 
   transform: translateY(-50%);
 
   max-width: 120px;
+
   height: auto;
+
 }
 
 
 header h1 {
+
   margin: 0;
 
   font-size: 2rem;
+
   color: #004080;
 
   background: white;
@@ -90,6 +117,7 @@ header h1 {
   display: inline-block;
 
   text-align: center;
+
 }
 
 
@@ -98,14 +126,18 @@ header h1 {
    ========================================================= */
 
 #controls {
+
   text-align: center;
 
   margin-top: 15px;
+
   margin-bottom: 15px;
+
 }
 
 
 #dateSelector {
+
   padding: 10px 16px;
 
   font-size: 16px;
@@ -121,15 +153,19 @@ header h1 {
   cursor: pointer;
 
   margin-left: 8px;
+
 }
 
 
 #dateSelector:hover {
+
   background-color: white;
+
 }
 
 
 #locationSelector {
+
   padding: 10px 16px;
 
   font-size: 16px;
@@ -145,15 +181,19 @@ header h1 {
   cursor: pointer;
 
   margin-left: 8px;
+
 }
 
 
 #locationSelector:hover {
+
   background-color: #0056b3;
+
 }
 
 
 #todayBtn {
+
   padding: 10px 16px;
 
   font-size: 16px;
@@ -169,11 +209,14 @@ header h1 {
   cursor: pointer;
 
   margin-left: 8px;
+
 }
 
 
 #todayBtn:hover {
+
   background-color: #0056b3;
+
 }
 
 
@@ -195,6 +238,7 @@ header h1 {
   cursor: pointer;
 
   margin-left: 8px;
+
 }
 
 
@@ -229,7 +273,9 @@ header h1 {
 
 /* =========================================================
    MAIN CONTENT LAYOUT
-   CHART + TABLE LEFT / APP CARD RIGHT
+
+   LEFT  = CHART + TABLE
+   RIGHT = APP CARD
    ========================================================= */
 
 #mainContent {
@@ -244,7 +290,7 @@ header h1 {
 
   grid-template-columns:
     minmax(0, 1fr)
-    290px;
+    240px;
 
   gap: 18px;
 
@@ -255,7 +301,6 @@ header h1 {
 
 /* =========================================================
    LEFT COLUMN
-   CHART + TIDE TABLE
    ========================================================= */
 
 #leftColumn {
@@ -290,93 +335,9 @@ canvas {
 
   display: block;
 
-  width: 100%;
+  width: 100% !important;
 
-  height: 420px;
-
-}
-
-
-/* =========================================================
-   TIDE TABLE
-   ========================================================= */
-
-#tableContainer {
-
-  width: 100%;
-
-  margin: 15px 0 0 0;
-
-}
-
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-  background: #fff;
-
-  border-radius: 6px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 1px 3px rgba(0,0,0,0.08);
-
-}
-
-
-th,
-td {
-
-  padding: 8px 10px;
-
-  text-align: center;
-
-  border-bottom: 1px solid #eee;
-
-}
-
-
-th {
-
-  background: #f7fbff;
-
-  color: #004080;
-
-  font-weight: 600;
-
-}
-
-
-/* =========================================================
-   CHART
-   ========================================================= */
-
-#chartWrap {
-
-  width: 100%;
-
-  position: relative;
-
-  min-width: 0;
-
-}
-
-
-canvas {
-
-  background: #fff;
-
-  border-radius: 8px;
-
-  display: block;
-
-  height: 420px;
-
-  width: 100%;
+  height: 420px !important;
 
 }
 
@@ -407,10 +368,136 @@ canvas {
 
 
 /* =========================================================
+   TIDE TABLE
+
+   IMPORTANT:
+   This is inside #leftColumn so it is exactly the
+   same width as the chart.
+   ========================================================= */
+
+#tableContainer {
+
+  width: 100%;
+
+  margin: 15px 0 0 0;
+
+}
+
+
+#tideTable {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: #fff;
+
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.08);
+
+}
+
+
+#tideTable th,
+#tideTable td {
+
+  padding: 8px 10px;
+
+  text-align: center;
+
+  border-bottom: 1px solid #eee;
+
+}
+
+
+#tideTable th {
+
+  background: #f7fbff;
+
+  color: #004080;
+
+  font-weight: 600;
+
+}
+
+
+#tideTable tr:last-child td {
+
+  border-bottom: none;
+
+}
+
+
+/* =========================================================
+   HIGH / LOW TABLE COLOURS
+   ========================================================= */
+
+.high {
+
+  color: green;
+
+  font-weight: 700;
+
+}
+
+
+.low {
+
+  color: orange;
+
+  font-weight: 700;
+
+}
+
+
+.highlight {
+
+  background: rgba(255,0,0,0.08);
+
+}
+
+
+.row-high {
+
+  background-color:
+    rgba(0,128,0,0.08);
+
+}
+
+
+.row-low {
+
+  background-color:
+    rgba(255,165,0,0.08);
+
+}
+
+
+.row-high td {
+
+  color: green;
+
+}
+
+
+.row-low td {
+
+  color: darkorange;
+
+}
+
+
+/* =========================================================
    APP DOWNLOAD CARD
    ========================================================= */
 
 #appCard {
+
+  width: 100%;
 
   background: rgba(255,255,255,0.97);
 
@@ -456,7 +543,7 @@ canvas {
 
   color: #004080;
 
-  font-size: 1.35rem;
+  font-size: 1.25rem;
 
   line-height: 1.2;
 
@@ -630,82 +717,12 @@ canvas {
 
 
 /* =========================================================
-   TIDE TABLE
+   HIDE NOTICE
    ========================================================= */
 
-#tableContainer {
+#notice {
 
-  width: 92%;
-
-  max-width: 1280px;
-
-  margin: 15px auto;
-
-}
-
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-  background: #fff;
-
-  border-radius: 6px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 1px 3px rgba(0,0,0,0.08);
-
-}
-
-
-th,
-td {
-
-  padding: 8px 10px;
-
-  text-align: center;
-
-  border-bottom: 1px solid #eee;
-
-}
-
-
-th {
-
-  background: #f7fbff;
-
-  color: #004080;
-
-  font-weight: 600;
-
-}
-
-
-.high {
-
-  color: green;
-
-  font-weight: 700;
-
-}
-
-
-.low {
-
-  color: orange;
-
-  font-weight: 700;
-
-}
-
-
-.highlight {
-
-  background: rgba(255,0,0,0.08);
+  display: none !important;
 
 }
 
@@ -720,52 +737,7 @@ th {
 
 
 /* =========================================================
-   TIDE TABLE ROW COLOURS
-   ========================================================= */
-
-.row-high {
-
-  background-color:
-    rgba(0,128,0,0.08);
-
-}
-
-
-.row-low {
-
-  background-color:
-    rgba(255,165,0,0.08);
-
-}
-
-
-.row-high td {
-
-  color: green;
-
-}
-
-
-.row-low td {
-
-  color: darkorange;
-
-}
-
-
-/* =========================================================
-   HIDE NOTICE
-   ========================================================= */
-
-#notice {
-
-  display: none !important;
-
-}
-
-
-/* =========================================================
-   MOBILE LAYOUT
+   MOBILE
    ========================================================= */
 
 @media (max-width: 800px) {
@@ -840,49 +812,24 @@ th {
   }
 
 
-#mainContent {
+  #mainContent {
 
-  width: 92%;
+    width: 92%;
 
-  display: flex;
+    display: flex;
 
-  flex-direction: column;
+    flex-direction: column;
 
-  gap: 15px;
+    gap: 15px;
 
-}
-
-
-#leftColumn {
-
-  width: 100%;
-
-}
+  }
 
 
-#chartWrap {
+  #leftColumn {
 
-  width: 100%;
+    width: 100%;
 
-}
-
-
-#tableContainer {
-
-  width: 100%;
-
-  margin: 15px 0 0 0;
-
-}
-
-
-#appCard {
-
-  width: 100%;
-
-  padding: 18px;
-
-}
+  }
 
 
   #chartWrap {
@@ -894,7 +841,16 @@ th {
 
   canvas {
 
-    height: 390px;
+    height: 390px !important;
+
+  }
+
+
+  #tableContainer {
+
+    width: 100%;
+
+    margin-top: 15px;
 
   }
 
@@ -925,18 +881,11 @@ th {
 
   }
 
-
-  #tableContainer {
-
-    width: 92%;
-
-  }
-
 }
 
 
 /* =========================================================
-   SMALL MOBILE DEVICES
+   SMALL MOBILE
    ========================================================= */
 
 @media (max-width: 500px) {
@@ -968,7 +917,7 @@ th {
 
   canvas {
 
-    height: 350px;
+    height: 350px !important;
 
   }
 
@@ -980,15 +929,15 @@ th {
   }
 
 
-  table {
+  #tideTable {
 
     font-size: 13px;
 
   }
 
 
-  th,
-  td {
+  #tideTable th,
+  #tideTable td {
 
     padding: 7px 5px;
 
@@ -1022,7 +971,6 @@ th {
 </header>
 
 
-
 <!-- =========================================================
      CONTROLS
      ========================================================= -->
@@ -1049,17 +997,21 @@ th {
   </button>
 
   <button id="toggleTableBtn">
-    Hide Tide Table ▼
+    Hide Tide Table ▲
   </button>
 
 </div>
 
 
-
 <!-- =========================================================
      MAIN CONTENT
-     TIDE CHART + TIDE TABLE LEFT
-     APP CARD RIGHT
+
+     LEFT:
+       CHART
+       TABLE
+
+     RIGHT:
+       APP ADVERTISEMENT
      ========================================================= -->
 
 <div id="mainContent">
@@ -1067,7 +1019,6 @@ th {
 
   <!-- =======================================================
        LEFT COLUMN
-       CHART + TIDE TABLE
        ======================================================= -->
 
   <div id="leftColumn">
@@ -1089,14 +1040,53 @@ th {
     </div>
 
 
-    
+    <!-- =====================================================
+         TIDE TABLE
+         ===================================================== -->
+
+    <div
+      id="tableContainer"
+      style="display:block;"
+    >
+
+      <table id="tideTable">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Time
+            </th>
+
+            <th>
+              Height (m)
+            </th>
+
+            <th>
+              Type
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody></tbody>
+
+      </table>
+
+    </div>
+
+
+  </div>
 
 
   <!-- =======================================================
-       NEW ZEALAND TIDES APP CARD
+       APP DOWNLOAD CARD
        ======================================================= -->
 
   <aside id="appCard">
+
 
     <img
       id="appCardLogo"
@@ -1202,6 +1192,7 @@ th {
       today's tides wherever you are.
     </p>
 
+
   </aside>
 
 
@@ -1233,7 +1224,6 @@ th {
 </div>
 
 
-
 <!-- =========================================================
      HIDDEN CSV NOTICE
      ========================================================= -->
@@ -1250,7 +1240,6 @@ th {
 </div>
 
 
-
 <script>
 
 
@@ -1261,76 +1250,75 @@ th {
 const LOCATIONS = {
 
   "Auckland":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_auckland.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_auckland.csv",
 
   "Wellington":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_wellington.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_wellington.csv",
 
   "Castelepoint":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_castelepoint.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_castelepoint.csv",
 
   "Dunedin":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_dunedin.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_dunedin.csv",
 
   "Gisborne":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_gisborne.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_gisborne.csv",
 
   "Invercargil":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_invercargil.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_invercargil.csv",
 
   "Kaikoura":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_kaikoura.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_kaikoura.csv",
 
   "Lottin Point":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_lottin%20point.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_lottin%20point.csv",
 
   "Nelson":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_nelson.csv",
 
   "New Brighton Pier":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_new%20brighton%20pier.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_new%20brighton%20pier.csv",
 
   "North Cape":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_nelson.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_nelson.csv",
 
   "Paratutae Islnad":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_paratutae%20islnad.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_paratutae%20islnad.csv",
 
   "Picton":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_picton.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_picton.csv",
 
   "Reglan":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_reglan.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_reglan.csv",
 
   "Taranaki":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_taranaki.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_taranaki.csv",
 
   "Thames":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_thames.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_thames.csv",
 
   "Timaru":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_timaru.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_timaru.csv",
 
   "Westport":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_westport.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_westport.csv",
 
   "Whanganui":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whanganui.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_whanganui.csv",
 
   "Whangarei":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide_whangarei.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide_whangarei.csv",
 
   "Mana Marina":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_mana%20marina.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_mana%20marina.csv",
 
   "Napier":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_napier.csv",
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_napier.csv",
 
   "Tauranga":
-    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/refs/heads/main/tide%C2%AD%C2%AD_tauranga.csv"
+    "https://raw.githubusercontent.com/prashanthhannikeri/Tide---New-Zealand-/main/tide%C2%AD%C2%AD_tauranga.csv"
 
 };
-
 
 
 /* =========================================================
@@ -1388,11 +1376,6 @@ const nextDayBtn =
   );
 
 
-csvUrlDisplay.textContent =
-  '(Select a location)';
-
-
-
 /* =========================================================
    LOCATION DROPDOWN
    ========================================================= */
@@ -1426,7 +1409,6 @@ Object.keys(LOCATIONS)
   );
 
 
-
 /* =========================================================
    DATA VARIABLES
    ========================================================= */
@@ -1443,9 +1425,8 @@ let dataPoints = [];
 let highLowPoints = [];
 
 
-
 /* =========================================================
-   GET LOCAL NZ DATE
+   GET LOCAL DATE
    ========================================================= */
 
 function getLocalISODate() {
@@ -1459,17 +1440,22 @@ function getLocalISODate() {
   const mm =
     String(
       d.getMonth() + 1
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   const dd =
     String(
       d.getDate()
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   return `${yyyy}-${mm}-${dd}`;
 
 }
-
 
 
 /* =========================================================
@@ -1487,6 +1473,7 @@ function parseCSV(text) {
           l.trim().length > 0
       );
 
+
   if (
     lines.length === 0
   ) {
@@ -1499,14 +1486,17 @@ function parseCSV(text) {
   const header =
     lines[0];
 
-  let delim = ',';
+
+  let delim =
+    ',';
 
 
   if (
     header.indexOf('\t') !== -1
   ) {
 
-    delim = '\t';
+    delim =
+      '\t';
 
   }
 
@@ -1514,7 +1504,8 @@ function parseCSV(text) {
     header.indexOf(';') !== -1
   ) {
 
-    delim = ';';
+    delim =
+      ';';
 
   }
 
@@ -1532,15 +1523,24 @@ function parseCSV(text) {
 }
 
 
-
 /* =========================================================
    CONVERT CSV DATE TO ISO
    ========================================================= */
 
 function csvDateToISO(dStr) {
 
+  if (!dStr) {
+
+    return null;
+
+  }
+
+
   const parts =
-    dStr.split('/');
+    dStr
+      .trim()
+      .split('/');
+
 
   if (
     parts.length < 3
@@ -1552,10 +1552,16 @@ function csvDateToISO(dStr) {
 
 
   const day =
-    parts[0].padStart(2,'0');
+    parts[0].padStart(
+      2,
+      '0'
+    );
 
   const month =
-    parts[1].padStart(2,'0');
+    parts[1].padStart(
+      2,
+      '0'
+    );
 
   const year =
     parts[2];
@@ -1567,24 +1573,40 @@ function csvDateToISO(dStr) {
     );
 
 
+  if (
+    isNaN(
+      tempDate.getTime()
+    )
+  ) {
+
+    return null;
+
+  }
+
+
   const yyyy =
     tempDate.getFullYear();
 
   const mm =
     String(
       tempDate.getMonth() + 1
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   const dd =
     String(
       tempDate.getDate()
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
 
   return `${yyyy}-${mm}-${dd}`;
 
 }
-
 
 
 /* =========================================================
@@ -1601,7 +1623,9 @@ function normalizeTime(tStr) {
 
 
   const parts =
-    tStr.split(':');
+    tStr
+      .trim()
+      .split(':');
 
 
   if (
@@ -1614,16 +1638,21 @@ function normalizeTime(tStr) {
 
 
   const hh =
-    parts[0].padStart(2,'0');
+    parts[0].padStart(
+      2,
+      '0'
+    );
 
   const mm =
-    parts[1].padStart(2,'0');
+    parts[1].padStart(
+      2,
+      '0'
+    );
 
 
   return `${hh}:${mm}`;
 
 }
-
 
 
 /* =========================================================
@@ -1638,6 +1667,7 @@ function buildDayMap(rows) {
 
 
   if (
+    !rows ||
     rows.length === 0
   ) {
 
@@ -1646,16 +1676,19 @@ function buildDayMap(rows) {
   }
 
 
-  let startIndex = 0;
+  let startIndex =
+    0;
 
 
   if (
+    !rows[0][0] ||
     !rows[0][0].match(
       /^\d{1,2}\/\d{1,2}\/\d{2,4}$/
     )
   ) {
 
-    startIndex = 1;
+    startIndex =
+      1;
 
   }
 
@@ -1671,6 +1704,7 @@ function buildDayMap(rows) {
 
 
     if (
+      !r ||
       r.length < 2
     ) {
 
@@ -1681,6 +1715,7 @@ function buildDayMap(rows) {
 
     const dateRaw =
       r[0];
+
 
     const iso =
       csvDateToISO(
@@ -1695,7 +1730,8 @@ function buildDayMap(rows) {
     }
 
 
-    const entries = [];
+    const entries =
+      [];
 
 
     for (
@@ -1712,23 +1748,34 @@ function buildDayMap(rows) {
 
 
       if (
-        t && h
+        t &&
+        h
       ) {
 
         const nt =
-          normalizeTime(t);
+          normalizeTime(
+            t
+          );
 
         const nh =
-          parseFloat(h);
+          parseFloat(
+            h
+          );
 
 
         if (
+          nt &&
           !isNaN(nh)
         ) {
 
           entries.push({
-            time: nt,
-            height: nh
+
+            time:
+              nt,
+
+            height:
+              nh
+
           });
 
         }
@@ -1764,7 +1811,6 @@ function buildDayMap(rows) {
 }
 
 
-
 /* =========================================================
    ADD DAYS TO ISO DATE
    ========================================================= */
@@ -1793,18 +1839,23 @@ function addDaysISO(
   const mm =
     String(
       d.getMonth() + 1
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
   const dd =
     String(
       d.getDate()
-    ).padStart(2,'0');
+    ).padStart(
+      2,
+      '0'
+    );
 
 
   return `${yyyy}-${mm}-${dd}`;
 
 }
-
 
 
 /* =========================================================
@@ -1828,7 +1879,8 @@ function buildKnownEventsForDate(
     );
 
 
-  const ev = [];
+  const ev =
+    [];
 
 
   function pushDay(
@@ -1877,14 +1929,14 @@ function buildKnownEventsForDate(
 
   ev.sort(
     (a,b) =>
-      +a.t - +b.t
+      +a.t -
+      +b.t
   );
 
 
   return ev;
 
 }
-
 
 
 /* =========================================================
@@ -1925,7 +1977,8 @@ function sampleDay(
     );
 
 
-  const sampled = [];
+  const sampled =
+    [];
 
 
   for (
@@ -1936,7 +1989,6 @@ function sampleDay(
       60 *
       1000
   ) {
-
 
     let prev =
       events[0];
@@ -2022,7 +2074,6 @@ function sampleDay(
 }
 
 
-
 /* =========================================================
    CHART VARIABLES
    ========================================================= */
@@ -2032,7 +2083,6 @@ let markerTime =
 
 let isDragging =
   false;
-
 
 
 /* =========================================================
@@ -2171,8 +2221,10 @@ const verticalLinePlugin = {
       `<strong>${s.x.toLocaleTimeString(
         [],
         {
-          hour:'2-digit',
-          minute:'2-digit'
+          hour:
+            '2-digit',
+          minute:
+            '2-digit'
         }
       )}</strong><br>
       ${s.y.toFixed(2)} m — ${trend}`;
@@ -2213,7 +2265,6 @@ const verticalLinePlugin = {
   }
 
 };
-
 
 
 /* =========================================================
@@ -2355,7 +2406,6 @@ function sampleAt(time) {
 }
 
 
-
 /* =========================================================
    CHART INITIALISATION
    ========================================================= */
@@ -2373,7 +2423,7 @@ const waterGradient =
     0,
     0,
     0,
-    ctx.canvas.height
+    420
   );
 
 
@@ -2387,7 +2437,6 @@ waterGradient.addColorStop(
   1,
   'rgba(0,123,255,0.5)'
 );
-
 
 
 /* =========================================================
@@ -2406,14 +2455,25 @@ const skyPlugin = {
 
     const {
       ctx,
-      chartArea: {
-        top,
-        bottom,
-        left,
-        right
-      }
+      chartArea
     } =
       chart;
+
+
+    if (!chartArea) {
+
+      return;
+
+    }
+
+
+    const {
+      top,
+      bottom,
+      left,
+      right
+    } =
+      chartArea;
 
 
     ctx.save();
@@ -2436,7 +2496,6 @@ const skyPlugin = {
   }
 
 };
-
 
 
 /* =========================================================
@@ -2613,7 +2672,6 @@ const chart =
   );
 
 
-
 /* =========================================================
    CHART INTERACTION
    ========================================================= */
@@ -2632,7 +2690,6 @@ function pixelToTime(px) {
     );
 
 }
-
 
 
 /* =========================================================
@@ -2704,7 +2761,6 @@ window.addEventListener(
 );
 
 
-
 /* =========================================================
    TOUCH SUPPORT
    ========================================================= */
@@ -2743,7 +2799,8 @@ canvas.addEventListener(
 
   },
   {
-    passive:false
+    passive:
+      false
   }
 );
 
@@ -2787,7 +2844,8 @@ canvas.addEventListener(
 
   },
   {
-    passive:false
+    passive:
+      false
   }
 );
 
@@ -2813,7 +2871,6 @@ canvas.addEventListener(
 
   }
 );
-
 
 
 /* =========================================================
@@ -2885,7 +2942,6 @@ function animateMarkerToNow() {
 }
 
 
-
 /* =========================================================
    KEEP MARKER SYNCHRONISED
    ========================================================= */
@@ -2907,7 +2963,6 @@ setInterval(
   },
   30000
 );
-
 
 
 /* =========================================================
@@ -2947,7 +3002,6 @@ toggleBtn.addEventListener(
 );
 
 
-
 /* =========================================================
    LOAD CSV
    ========================================================= */
@@ -2958,9 +3012,19 @@ async function loadAndInit(
 
   try {
 
+    console.log(
+      'Loading tide data:',
+      csvUrl
+    );
+
+
     const res =
       await fetch(
-        csvUrl
+        csvUrl,
+        {
+          cache:
+            'no-store'
+        }
       );
 
 
@@ -2969,7 +3033,7 @@ async function loadAndInit(
     ) {
 
       throw new Error(
-        'Failed to fetch CSV: ' +
+        'Failed to fetch CSV: HTTP ' +
         res.status
       );
 
@@ -2980,10 +3044,33 @@ async function loadAndInit(
       await res.text();
 
 
+    if (
+      !txt ||
+      txt.trim().length === 0
+    ) {
+
+      throw new Error(
+        'CSV file is empty.'
+      );
+
+    }
+
+
     rawRows =
       parseCSV(
         txt
       );
+
+
+    if (
+      rawRows.length === 0
+    ) {
+
+      throw new Error(
+        'CSV contains no rows.'
+      );
+
+    }
 
 
     buildDayMap(
@@ -3026,18 +3113,26 @@ async function loadAndInit(
   catch(err) {
 
     console.error(
+      'Tide CSV loading error:',
       err
     );
 
 
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="3">
+          Unable to load tide data.
+        </td>
+      </tr>`;
+
+
     alert(
-      'Failed to load CSV.'
+      'Failed to load tide data. Please check the browser console for details.'
     );
 
   }
 
 }
-
 
 
 /* =========================================================
@@ -3083,7 +3178,6 @@ function renderForDate(
   }
 
 
-
   /* =======================================================
      DYNAMIC CHART HEIGHT
      ======================================================= */
@@ -3110,7 +3204,6 @@ function renderForDate(
 
   chart.options.scales.y.max =
     adjustedMax;
-
 
 
   /* =======================================================
@@ -3146,7 +3239,6 @@ function renderForDate(
           +a.x -
           +b.x
       );
-
 
 
   /* =======================================================
@@ -3224,7 +3316,6 @@ function renderForDate(
   }
 
 
-
   /* =======================================================
      UPDATE MAIN CHART
      ======================================================= */
@@ -3241,7 +3332,6 @@ function renderForDate(
 
       })
     );
-
 
 
   /* =======================================================
@@ -3286,7 +3376,6 @@ function renderForDate(
     );
 
 
-
   /* =======================================================
      COLOUR HIGH / LOW MARKERS
      ======================================================= */
@@ -3309,7 +3398,6 @@ function renderForDate(
     );
 
 
-
   /* =======================================================
      REBUILD TIDE TABLE
      ======================================================= */
@@ -3330,7 +3418,6 @@ function renderForDate(
       </tr>`;
 
   }
-
 
   else {
 
@@ -3369,7 +3456,6 @@ function renderForDate(
         }
 
 
-
         /* Time */
 
         const tdTime =
@@ -3391,7 +3477,6 @@ function renderForDate(
           );
 
 
-
         /* Height */
 
         const tdH =
@@ -3404,7 +3489,6 @@ function renderForDate(
           p.y.toFixed(
             2
           );
-
 
 
         /* Type */
@@ -3440,16 +3524,13 @@ function renderForDate(
         }
 
 
-
         tr.appendChild(
           tdTime
         );
 
-
         tr.appendChild(
           tdH
         );
-
 
         tr.appendChild(
           tdType
@@ -3466,7 +3547,6 @@ function renderForDate(
   }
 
 
-
   /* =======================================================
      SET MARKER TO CURRENT TIME
      ======================================================= */
@@ -3478,7 +3558,6 @@ function renderForDate(
   chart.update();
 
 }
-
 
 
 /* =========================================================
@@ -3504,7 +3583,6 @@ dateSelector.addEventListener(
 
   }
 );
-
 
 
 /* =========================================================
@@ -3574,7 +3652,6 @@ function changeDay(
 }
 
 
-
 /* =========================================================
    PREVIOUS / NEXT DAY
    ========================================================= */
@@ -3591,7 +3668,6 @@ nextDayBtn.addEventListener(
   () =>
     changeDay(1)
 );
-
 
 
 /* =========================================================
@@ -3616,7 +3692,6 @@ todayBtn.addEventListener(
 
   }
 );
-
 
 
 /* =========================================================
@@ -3649,7 +3724,6 @@ locationSelector.addEventListener(
 );
 
 
-
 /* =========================================================
    INITIAL LOAD
    ========================================================= */
@@ -3674,10 +3748,8 @@ loadAndInit(
   ]
 );
 
-
 </script>
 
 </body>
 
 </html>
-```
