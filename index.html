@@ -70,49 +70,50 @@ body {
    ========================================================= */
 
 header {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
+  width: 100%;
   position: relative;
 
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  max-width: 1280px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 
-  margin: 15px auto;
+  min-height: 70px;
 
   text-align: center;
-
 }
 
 
-header img {
+/* WEBSITE LOGO — LEFT SIDE */
 
+header img {
   position: absolute;
 
   left: 10px;
-
   top: 50%;
 
   transform: translateY(-50%);
 
+  width: 120px;
   max-width: 120px;
-
   height: auto;
 
+  display: block;
+
+  object-fit: contain;
+
+  z-index: 10;
 }
 
 
-header h1 {
+/* PAGE TITLE */
 
+header h1 {
   margin: 0;
 
   font-size: 2rem;
-
   color: #004080;
 
   background: white;
@@ -124,9 +125,7 @@ header h1 {
   display: inline-block;
 
   text-align: center;
-
 }
-
 
 /* =========================================================
    CONTROLS
@@ -942,15 +941,27 @@ tbody tr:last-child td {
      HEADER
      ------------------------------------------------------- */
 
+
+@media (max-width: 800px) {
+
   header {
 
-    position: static;
+    width: 100%;
 
     display: flex;
 
     flex-direction: column;
 
-    margin: 5px auto 12px auto;
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+
+    min-height: auto;
+
+    margin-top: 10px;
+    margin-bottom: 15px;
 
   }
 
@@ -961,24 +972,28 @@ tbody tr:last-child td {
 
     transform: none;
 
-    width: 75px;
+    width: 90px;
 
-    max-width: 75px;
+    max-width: 90px;
 
-    margin: 0 auto 8px auto;
+    height: auto;
+
+    margin: 0 auto 10px auto;
 
   }
 
 
   header h1 {
 
-    font-size: 1.35rem;
+    font-size: 1.6rem;
 
-    padding: 5px 9px;
+    margin: 0;
 
-    line-height: 1.2;
+    padding: 5px 10px;
 
   }
+
+}
 
 
   /* -------------------------------------------------------
